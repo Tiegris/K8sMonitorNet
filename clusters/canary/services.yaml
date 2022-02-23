@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fe
+  labels:
+    app: fe
+spec:
+  selector:
+    app: fe
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: be
+  labels:
+    app: be
+spec:
+  selector:
+    app: be
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
