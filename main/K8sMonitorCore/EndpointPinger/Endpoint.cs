@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EndpointPinger
+namespace Pinger
 {
     public class Endpoint
     {
@@ -18,7 +18,7 @@ namespace EndpointPinger
                 Status = StatusType.Dead;
                 fails = FailureThreshold + 1;
             } else {                
-                Status = StatusType.Dieing;
+                Status = StatusType.Dying;
             }
         }
 

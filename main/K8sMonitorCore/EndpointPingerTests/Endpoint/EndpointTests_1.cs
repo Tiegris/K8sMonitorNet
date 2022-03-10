@@ -1,4 +1,4 @@
-using EndpointPinger;
+using Pinger;
 using NUnit.Framework;
 
 namespace EndpointPingerTests
@@ -29,7 +29,7 @@ namespace EndpointPingerTests
                 FailureThreshold = 1,
             };
             ep.Fail();
-            Assert.AreEqual(StatusType.Dieing, ep.Status);
+            Assert.AreEqual(StatusType.Dying, ep.Status);
             ep.Fail();
             Assert.AreEqual(StatusType.Dead, ep.Status);
             ep.Success();
@@ -49,7 +49,7 @@ namespace EndpointPingerTests
             ep.Success();
             Assert.AreEqual(StatusType.Healthy, ep.Status);
             ep.Fail();
-            Assert.AreEqual(StatusType.Dieing, ep.Status);
+            Assert.AreEqual(StatusType.Dying, ep.Status);
             ep.Success();
             Assert.AreEqual(StatusType.Healthy, ep.Status);
         }
