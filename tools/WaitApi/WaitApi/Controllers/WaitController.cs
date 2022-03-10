@@ -21,16 +21,18 @@ namespace WaitApi.Controllers
         }
 
         [HttpGet]
-        public void Get()
-        {
-            return;
-        }
-
-        [HttpGet("{time}")]
-        public void Get([FromRoute] int time)
+        public ActionResult GetFromQuery([FromQuery] int time = 0, [FromQuery] int status = 200)
         {
             Thread.Sleep(time);
-            return;
+            return StatusCode(status);
         }
+
+        [HttpGet("{time}/{status}")]
+        public ActionResult GetFromRoute([FromRoute] int time = 0, [FromRoute] int status = 200)
+        {
+            Thread.Sleep(time);
+            return StatusCode(status);
+        }
+
     }
 }

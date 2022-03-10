@@ -1,0 +1,22 @@
+HashMap<MonitoredNs> {
+    key: ns-name
+    value: MonitoredNs {
+        services: HashMap<MonitoredSrv> {
+            key: srv-name
+            value: MonitoredSrv {
+                srv-name: srv-name
+                timeout: 
+                period:
+                failure_threshold:
+
+                monitor-task: Task {
+
+                }
+                status: ServiceStatus {
+                    Red, Green, Yellow
+                }
+            }
+        }
+        ns-name: ns-name
+    }
+}
