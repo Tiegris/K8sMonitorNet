@@ -2,22 +2,36 @@
 
 namespace Pinger
 {
+    public delegate void EndpointStatusChanged(StatusType newStatus);
+
     public class Endpoint
     {
-        public StatusType Status { get; private set; }
+
+        public event EndpointStatusChanged StatusChanged;
+        public StatusType Status { 
+            get => status; 
+            private set {
+                if (value != status) {
+                    StatusChanged?.Invoke(value);
+                }
+                status = value;
+            } 
+        }
         public int FailureThreshold { get; init; }
         public TimeSpan Timeout { get; init; }
         public TimeSpan Period { get; init; }
         public Uri Uri { get; init; }
 
         private int fails = 0;
+        private StatusType status;
 
         public void Fail() {
             fails++;
             if (fails >= FailureThreshold + 1) {
                 Status = StatusType.Dead;
                 fails = FailureThreshold + 1;
-            } else {                
+            }
+            else {
                 Status = StatusType.Dying;
             }
         }
@@ -28,7 +42,7 @@ namespace Pinger
                 Status = StatusType.Healthy;
                 fails = 0;
             }
-            else {                
+            else {
                 Status = StatusType.Recovering;
             }
         }

@@ -29,7 +29,11 @@ namespace Pinger
             cancelObject.Cancel();
         }
 
-        public async Task StartAsync() {
+        public void StartAndForget() {
+            _ = StartAsync();
+        }
+
+        private async Task StartAsync() {
             var ct = cancelObject.Token;
             while (!ct.IsCancellationRequested) {
                 CancellationTokenSource cancelCycle = new();
@@ -65,6 +69,9 @@ namespace Pinger
             logger.LogInformation("Pinging cycle ended for {enbdpoint}", endpoint.Uri);
         }
 
+        ~EndpointPinger() {
+            Cancel();
+        }
 
     }
 }

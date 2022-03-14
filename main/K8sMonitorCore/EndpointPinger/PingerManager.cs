@@ -23,7 +23,7 @@ namespace Pinger
 
         public string RegisterEndpoint(string name, Endpoint endpoint) {
             var epp = new EndpointPinger(endpoint, hcf, lf);
-            var task = epp.StartAsync();
+            epp.StartAndForget();
             map.TryAdd(name, epp);
             return name;
         }
