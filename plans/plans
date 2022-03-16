@@ -1,22 +1,31 @@
-HashMap<MonitoredNs> {
-    key: ns-name
-    value: MonitoredNs {
-        services: HashMap<MonitoredSrv> {
-            key: srv-name
-            value: MonitoredSrv {
-                srv-name: srv-name
-                timeout: 
-                period:
-                failure_threshold:
-
-                monitor-task: Task {
-
-                }
-                status: ServiceStatus {
-                    Red, Green, Yellow
-                }
-            }
-        }
-        ns-name: ns-name
-    }
+namespaces: {
+    annotations:
+      mnet.enabled: true
 }
+
+services: {
+    annotations:
+      mnet.port: 8080               # int                             [defaults to 80]
+      mnet.path: "/health"          # leading '/' optional            [needed for pinging, the server looks for this annotation first]
+      mnet.timeout: 4               # int, default unit: seconds      [defaults to 1s]
+      mnet.period: 30               # int, default unit: seconds      [defaults to 1m]
+      mnet.failureThreshold: 5      # int                             [defaults to 2]
+      mnet.hpa: true                # boolean                         [defaults to false, set true to ping pods too]
+      mnet.hpa.percent: 80          # int                             [defaults to 50]
+      mnet.aggregation: <group_name>
+}
+
+
+serverCore: {
+    annotations:
+     
+      mnet.defaults.timeout
+      mnet.defaults.period
+      mnet.defaults.failureThreshold
+      mnet.defaults.port
+      mnet.defaults.hpa
+      mnet.defaults.hpa.percent
+}
+
+# todo concurrent dict lookup
+# selector névtérre
