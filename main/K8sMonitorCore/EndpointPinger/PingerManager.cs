@@ -1,11 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pinger
 {
@@ -29,10 +25,9 @@ namespace Pinger
         }
 
         public void UnregisterEndpoint(string name) {
-            EndpointPinger epp;
-            bool success = map.TryRemove(name, out epp);
+            bool success = map.TryRemove(name, out EndpointPinger epp);
             if (success && epp != null) {
-                epp.Cancel();
+                epp.Dispose();
             }
         }
 

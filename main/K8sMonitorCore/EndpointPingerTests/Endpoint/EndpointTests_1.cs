@@ -12,7 +12,7 @@ namespace EndpointPingerTests
 
         [Test]
         public void Test1() {
-            Endpoint ep = new Endpoint {
+            Endpoint ep = new() {
                 FailureThreshold = 0,
             };
             ep.Fail();
@@ -25,7 +25,7 @@ namespace EndpointPingerTests
 
         [Test]
         public void Test2() {
-            Endpoint ep = new Endpoint {
+            Endpoint ep = new() {
                 FailureThreshold = 1,
             };
             ep.Fail();
@@ -41,7 +41,7 @@ namespace EndpointPingerTests
 
         [Test]
         public void Test3() {
-            Endpoint ep = new Endpoint {
+            Endpoint ep = new() {
                 FailureThreshold = 1,
             };
             ep.Success();

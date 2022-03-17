@@ -3,11 +3,9 @@ using System.Threading;
 
 namespace Pinger
 {
-    public delegate void EndpointStatusChanged(StatusType newStatus);
-
     public class Endpoint
     {
-        public StatusType Status { get; set; }
+        public StatusType Status { get; private set; }
         public int FailureThreshold { get; init; }
         public TimeSpan Timeout { get; init; }
         public TimeSpan Period { get; init; }
@@ -15,7 +13,7 @@ namespace Pinger
 
         private int fails = 0;
 
-        public void Fail() {
+        internal void Fail() {
             var temp = Interlocked.Increment(ref fails);
             if (temp >= FailureThreshold + 1) {
                 Status = StatusType.Dead;
@@ -26,7 +24,7 @@ namespace Pinger
             }
         }
 
-        public void Success() {
+        internal void Success() {
             Interlocked.Decrement(ref fails);
             if (fails <= 0) {
                 Status = StatusType.Healthy;

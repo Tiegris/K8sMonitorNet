@@ -1,42 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace Pinger
 {
-    public class EndpointPinger
+    internal class EndpointPinger : IDisposable
     {
-        public Endpoint Endpoint => endpoint;
-
+        internal Endpoint Endpoint => endpoint;
 
         private readonly CancellationTokenSource cancelObject = new();
         private readonly IHttpClientFactory hcf;
         private readonly Endpoint endpoint;
         private readonly ILogger logger;
 
-        public EndpointPinger(Endpoint endpoint, IHttpClientFactory hcf, ILoggerFactory loggerFactory) {
+        internal EndpointPinger(Endpoint endpoint, IHttpClientFactory hcf, ILoggerFactory loggerFactory) {
             this.endpoint = endpoint;
             this.hcf = hcf;
             this.logger = loggerFactory.CreateLogger<EndpointPinger>();
         }
 
-        public void Cancel() {
-            cancelObject.Cancel();
-        }
-
-        public void StartAndForget() {
+        internal void StartAndForget() {
             _ = StartAsync();
         }
 
         private async Task StartAsync() {
             var ct = cancelObject.Token;
             while (!ct.IsCancellationRequested) {
-                CancellationTokenSource cancelCycle = new();
+                using CancellationTokenSource cancelCycle = new();
                 cancelCycle.CancelAfter(endpoint.Period);
                 try {
                     var delay = Task.Delay(endpoint.Period, ct);
@@ -50,13 +42,13 @@ namespace Pinger
             logger.LogInformation("Stopped pinging {endpoint}", endpoint.Uri);
         }
 
-        private async Task PingCycleAsync(CancellationToken ct) {
+        private async Task PingCycleAsync(CancellationToken cancelCycle) {
             logger.LogInformation("Pinging cycle started for {enbdpoint}", endpoint.Uri);
 
-            var client = hcf.CreateClient();
+            using var client = hcf.CreateClient();
             client.Timeout = endpoint.Timeout;
             try {
-                var response = await client.GetAsync(endpoint.Uri, ct);
+                var response = await client.GetAsync(endpoint.Uri, cancelCycle);
                 if (response.IsSuccessStatusCode)
                     endpoint.Success();
                 else
@@ -69,9 +61,23 @@ namespace Pinger
             logger.LogInformation("Pinging cycle ended for {enbdpoint}", endpoint.Uri);
         }
 
-        ~EndpointPinger() {
-            Cancel();
+        #region Dispose
+        private bool disposed;
+        public void Dispose() {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+        protected virtual void Dispose(bool disposing) {
+            if (!disposed) {
+                if (disposing) {
+                    cancelObject?.Cancel();
+                    cancelObject.Dispose();
+                }
+
+                disposed = true;
+            }
+        }
+        #endregion
 
     }
 }
