@@ -71,7 +71,7 @@ namespace Pinger
             if (!disposed) {
                 if (disposing) {
                     cancelObject?.Cancel();
-                    cancelObject.Dispose();
+                    cancelObject?.Dispose();
                 }
 
                 disposed = true;

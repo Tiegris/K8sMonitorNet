@@ -13,6 +13,20 @@ namespace Pinger
 
         private int fails = 0;
 
+        /// <summary>
+        /// Use for testing only.
+        /// </summary>
+        internal Endpoint() {
+            Uri = new Uri("http://localhost:8080");
+        }
+
+        public Endpoint(int failureThreshold, TimeSpan timeout, TimeSpan period, Uri uri) {
+            FailureThreshold = failureThreshold;
+            Timeout = timeout;
+            Period = period;
+            Uri = uri;
+        }
+
         internal void Fail() {
             var temp = Interlocked.Increment(ref fails);
             if (temp >= FailureThreshold + 1) {

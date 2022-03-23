@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using KubernetesSyncronizer.Settings;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Pinger;
 using System;
 using System.Collections.Generic;
@@ -11,11 +13,12 @@ namespace K8sMonitorCore.Controllers
     [Route("[controller]")]
     public class DemoController : ControllerBase
     {
+        private readonly PingerManager pinger;
+        private readonly IOptions<Defaults> options;
 
-        PingerManager pinger;
-
-        public DemoController(PingerManager pinger) {
+        public DemoController(PingerManager pinger, IOptions<Defaults> options) {
             this.pinger = pinger;
+            this.options = options;
         }
 
         [HttpGet("Scrape")]
@@ -26,40 +29,40 @@ namespace K8sMonitorCore.Controllers
 
         [HttpGet("Start")]
         public void New() {
-            pinger.RegisterEndpoint("0_200", new Endpoint {
-                FailureThreshold = 1,
-                Period = new TimeSpan(0, 0, 10),
-                Timeout = new TimeSpan(0, 0, 5),
-                Uri = new Uri("http://localhost:9000/Wait/0/200"),
-            });
+            //pinger.RegisterEndpoint("0_200", new Endpoint {
+            //    FailureThreshold = 1,
+            //    Period = new TimeSpan(0, 0, 10),
+            //    Timeout = new TimeSpan(0, 0, 5),
+            //    Uri = new Uri("http://localhost:9000/Wait/0/200"),
+            //});
 
-            pinger.RegisterEndpoint("0_500", new Endpoint {
-                FailureThreshold = 1,
-                Period = new TimeSpan(0, 0, 20),
-                Timeout = new TimeSpan(0, 0, 5),
-                Uri = new Uri("http://localhost:9001/Wait/0/500"),
-            });
+            //pinger.RegisterEndpoint("0_500", new Endpoint {
+            //    FailureThreshold = 1,
+            //    Period = new TimeSpan(0, 0, 20),
+            //    Timeout = new TimeSpan(0, 0, 5),
+            //    Uri = new Uri("http://localhost:9001/Wait/0/500"),
+            //});
 
-            pinger.RegisterEndpoint("error", new Endpoint {
-                FailureThreshold = 1,
-                Period = new TimeSpan(0, 0, 10),
-                Timeout = new TimeSpan(0, 0, 5),
-                Uri = new Uri("http://localhost:8999/Wait/0/200"),
-            });
+            //pinger.RegisterEndpoint("error", new Endpoint {
+            //    FailureThreshold = 1,
+            //    Period = new TimeSpan(0, 0, 10),
+            //    Timeout = new TimeSpan(0, 0, 5),
+            //    Uri = new Uri("http://localhost:8999/Wait/0/200"),
+            //});
 
-            pinger.RegisterEndpoint("timeout", new Endpoint {
-                FailureThreshold = 1,
-                Period = new TimeSpan(0, 0, 6),
-                Timeout = new TimeSpan(0, 0, 1),
-                Uri = new Uri("http://localhost:9002/Wait/3000/200"),
-            });
+            //pinger.RegisterEndpoint("timeout", new Endpoint {
+            //    FailureThreshold = 1,
+            //    Period = new TimeSpan(0, 0, 6),
+            //    Timeout = new TimeSpan(0, 0, 1),
+            //    Uri = new Uri("http://localhost:9002/Wait/3000/200"),
+            //});
 
-            pinger.RegisterEndpoint("wake_4", new Endpoint {
-                FailureThreshold = 1,
-                Period = new TimeSpan(0, 0, 10),
-                Timeout = new TimeSpan(0, 0, 5),
-                Uri = new Uri("http://localhost:9004/Wait/0/200"),
-            });
+            //pinger.RegisterEndpoint("wake_4", new Endpoint {
+            //    FailureThreshold = 1,
+            //    Period = new TimeSpan(0, 0, 10),
+            //    Timeout = new TimeSpan(0, 0, 5),
+            //    Uri = new Uri("http://localhost:9004/Wait/0/200"),
+            //});
         }
 
 

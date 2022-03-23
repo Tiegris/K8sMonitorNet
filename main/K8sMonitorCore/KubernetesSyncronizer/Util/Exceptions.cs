@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace K8sMonitorCore.Util
+namespace KubernetesSyncronizer.Util
 {
     public class K8sException : Exception
     {

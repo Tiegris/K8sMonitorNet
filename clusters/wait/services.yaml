@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wait-1
+  annotations:
+    mnet.port: "8080"
+    mnet.path: "/health"
+    mnet.timeout: "4"
+    mnet.period: "30"
+    mnet.failureThreshold: "5"
+    mnet.hpa: "true"
+    mnet.hpa.percent: "80"
+    mnet.aggregation: "asd"
+spec:
+  selector:
+    app: wait-1
+  ports:
+  - port: 9000
+    targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wait-2
+spec:
+  selector:
+    app: wait-2
+  ports:
+  - port: 9001
+    targetPort: 80

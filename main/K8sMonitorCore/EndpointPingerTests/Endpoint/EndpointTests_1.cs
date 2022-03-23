@@ -1,5 +1,6 @@
 using Pinger;
 using NUnit.Framework;
+using System;
 
 namespace EndpointPingerTests
 {

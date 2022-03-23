@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KubernetesSyncronizer.Settings;
 
 namespace K8sMonitorCore
 {
@@ -29,7 +30,10 @@ namespace K8sMonitorCore
             services.AddHttpClient();
 
             services.AddSingleton<PingerManager>();
+            services.AddK8sClient();
 
+            services.Configure<Defaults>(
+                Configuration.GetSection("Defaults"));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

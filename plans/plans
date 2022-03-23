@@ -11,21 +11,11 @@ services: {
       mnet.period: 30               # int, default unit: seconds      [defaults to 1m]
       mnet.failureThreshold: 5      # int                             [defaults to 2]
       mnet.hpa: true                # boolean                         [defaults to false, set true to ping pods too]
-      mnet.hpa.percent: 80          # int                             [defaults to 50]
+      mnet.hpa.percentage: 80          # int                             [defaults to 50]
       mnet.aggregation: <group_name>
 }
 
 
-serverCore: {
-    annotations:
-     
-      mnet.defaults.timeout
-      mnet.defaults.period
-      mnet.defaults.failureThreshold
-      mnet.defaults.port
-      mnet.defaults.hpa
-      mnet.defaults.hpa.percent
-}
 
-# todo concurrent dict lookup
+
 # selector névtérre

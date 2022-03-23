@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wait-1
+spec:
+  selector:
+    matchLabels:
+      app: wait-1
+  template:
+    metadata:
+      labels:
+        app: wait-1
+    spec:
+      containers:
+      - name: wait-1
+        image: tiegris/wait-api
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wait-2
+spec:
+  selector:
+    matchLabels:
+      app: wait-2
+  template:
+    metadata:
+      labels:
+        app: wait-2
+    spec:
+      containers:
+      - name: wait-2
+        image: tiegris/wait-api
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 80
