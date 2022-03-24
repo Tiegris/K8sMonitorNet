@@ -3,13 +3,13 @@ kind: Service
 metadata:
   name: wait-1
   annotations:
-    mnet.usi.scheme: "http"
+    mnet.usi.scheme: "http://"
     mnet.uri.port: "8080"
-    mnet.uri.path: "/health"
+    mnet.uri.path: "health"
     mnet.timeout: "4"
     mnet.period: "30"
     mnet.failureThreshold: "5"
-    mnet.hpa: "true"
+    mnet.hpa.enabled: "false"
     mnet.hpa.percent: "80"
     mnet.aggregation: "asd"
 spec:
