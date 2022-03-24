@@ -5,9 +5,9 @@ namespace K8sMonitorCore.Domain
 {
     public class ServiceHealthStatusDto
     {
-        public ServiceHealthStatusDto(DateTime lastChecked, StatusType statusCode) {
-            LastChecked = lastChecked;
-            StatusCode = statusCode;
+        public ServiceHealthStatusDto(EndpointStatusInfo info) {
+            LastChecked = info.LastChecked;
+            StatusCode = info.StatusCode;
         }
 
         public DateTime LastChecked { get; internal init; }
@@ -15,5 +15,14 @@ namespace K8sMonitorCore.Domain
         public string StatusString => StatusCode.ToString();
     }
 
+    public static class ServiceHealthStatusDtoExtensions
+    {
+        public static ServiceHealthStatusDto? ToDto(this EndpointStatusInfo? info) {
+            if (info is not null)
+                return new ServiceHealthStatusDto(info);
+            else
+                return null;
+        }
+    }
 
 }

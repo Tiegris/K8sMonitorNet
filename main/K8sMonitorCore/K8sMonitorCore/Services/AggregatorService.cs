@@ -31,10 +31,9 @@ namespace K8sMonitorCore.Services
             return resources.Select(a => new ServiceInfoDto(
                 a.Name,
                 a.Errors,
-                new ServiceHealthStatusDto(
-                    statusInfos.Where(b => a.Name == b.Name).Select(b => b.LastChecked).First(),
-                    statusInfos.Where(b => a.Name == b.Name).Select(b => b.StatusCode).First()
-                ),
+                statusInfos.Where(b => a.Name == b.Name).FirstOrDefault().ToDto(),
+                a.Errors.HasErrors ?
+                null :
                 new ServiceSettingsDto(
                     a.FailureThreshold,
                     a.Timeout,

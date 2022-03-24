@@ -13,9 +13,9 @@ namespace KubernetesSyncronizer.Util
     {
         private readonly List<ConfigurationErrorEntry> errors = new();
 
-        public bool HasErrors => errors.Count > 0;
+        public List<ConfigurationErrorEntry> ErrorList => errors;
 
-        public bool NoErrors => errors.Count == 0;
+        public bool HasErrors => errors.Count > 0;
 
         public void AddIfNotNull(ConfigurationErrorEntry? error) {
             if (error is not null) errors.Add(error);
