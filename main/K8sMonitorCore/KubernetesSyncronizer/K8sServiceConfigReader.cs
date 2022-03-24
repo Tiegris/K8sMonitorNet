@@ -1,8 +1,5 @@
 ﻿using k8s;
 using k8s.Models;
-using KubernetesSyncronizer.Settings;
-using Microsoft.Extensions.Options;
-using Pinger;
 using System;
 using System.Threading.Tasks;
 using static k8s.WatchEventType;

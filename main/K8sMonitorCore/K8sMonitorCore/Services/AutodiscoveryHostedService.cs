@@ -15,7 +15,7 @@ namespace K8sMonitorCore.Services
                 client, resourceRegistry);
         }
 
-        public Task StartAsync(CancellationToken cancellationToken) {            
+        public Task StartAsync(CancellationToken cancellationToken) {
             discovery.StartAndForget();
             return Task.CompletedTask;
         }

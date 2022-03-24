@@ -1,5 +1,4 @@
-﻿using K8sMonitorCore.Aggregation;
-using K8sMonitorCore.Domain;
+﻿using K8sMonitorCore.Domain;
 using KubernetesSyncronizer;
 using Pinger;
 using System.Collections.Generic;

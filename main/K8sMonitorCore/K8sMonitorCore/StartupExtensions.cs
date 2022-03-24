@@ -5,10 +5,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace K8sMonitorCore
 {
-    public static class ServiceExtensions
+    public static class StartupExtensions
     {
         public static IServiceCollection AddK8sClient(this IServiceCollection services) {
+#if DEBUG
             KubernetesClientConfiguration config = KubernetesClientConfiguration.BuildConfigFromConfigFile();
+#else
+            KubernetesClientConfiguration config = KubernetesClientConfiguration.InClusterConfig();
+#endif
             IKubernetes client = new Kubernetes(config);
             services.AddSingleton<IKubernetes>(client);
             return services;

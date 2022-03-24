@@ -1,8 +1,6 @@
 ﻿using K8sMonitorCore.Domain;
 using K8sMonitorCore.Services;
-using KubernetesSyncronizer;
 using Microsoft.AspNetCore.Mvc;
-using Pinger;
 using System.Collections.Generic;
 
 namespace K8sMonitorCore.Controllers
