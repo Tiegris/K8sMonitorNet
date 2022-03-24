@@ -2,10 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Pinger;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace K8sMonitorCore.Controllers
 {
@@ -22,8 +19,7 @@ namespace K8sMonitorCore.Controllers
         }
 
         [HttpGet("Scrape")]
-        public List<EndpointStatusInfo> Scrape()
-        {
+        public List<EndpointStatusInfo> Scrape() {
             return pinger.Scrape();
         }
 

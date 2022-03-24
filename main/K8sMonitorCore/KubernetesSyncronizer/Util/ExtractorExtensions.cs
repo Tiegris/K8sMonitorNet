@@ -1,6 +1,5 @@
 ﻿using k8s.Models;
 using KubernetesSyncronizer.Settings;
-using Pinger;
 using System;
 using System.Collections.Generic;
 using static KubernetesSyncronizer.Util.Utils;
@@ -89,9 +88,9 @@ namespace KubernetesSyncronizer.Util
             errors.AddIfNotNull(TryExtract(it, PORT, defaults.Port, out int port));
             if (port <= 0 && port > 65535)
                 errors.Add(new ConfigurationErrorEntry(
-                    PORT, 
-                    port.ToString(), 
-                    ConfigurationErrorType.OutOfRangeError, 
+                    PORT,
+                    port.ToString(),
+                    ConfigurationErrorType.OutOfRangeError,
                     "Port must be between 0 and 65535"
                 ));
 

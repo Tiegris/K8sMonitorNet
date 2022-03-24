@@ -1,8 +1,8 @@
-﻿using Pinger;
+﻿using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using System.Net.Http;
-using Microsoft.Extensions.Logging;
+using Pinger;
 using System;
+using System.Net.Http;
 
 namespace EndpointPingerTests
 {

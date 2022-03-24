@@ -34,8 +34,7 @@ namespace Pinger
             if (temp >= FailureThreshold + 1) {
                 Status = StatusType.Dead;
                 Interlocked.Exchange(ref fails, FailureThreshold + 1);
-            }
-            else {
+            } else {
                 Status = StatusType.Dying;
             }
         }
@@ -46,8 +45,7 @@ namespace Pinger
             if (fails <= 0) {
                 Status = StatusType.Healthy;
                 Interlocked.Exchange(ref fails, 0);
-            }
-            else {
+            } else {
                 Status = StatusType.Recovering;
             }
         }

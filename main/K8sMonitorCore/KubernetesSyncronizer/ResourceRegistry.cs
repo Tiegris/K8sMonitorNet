@@ -1,14 +1,9 @@
 ﻿using k8s.Models;
-using Pinger;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using KubernetesSyncronizer.Util;
 using KubernetesSyncronizer.Settings;
+using KubernetesSyncronizer.Util;
 using Microsoft.Extensions.Options;
+using Pinger;
+using System.Collections.Concurrent;
 
 namespace KubernetesSyncronizer
 {

@@ -17,8 +17,7 @@ namespace KubernetesSyncronizer.Util
                     throw new K8sFqdnException($"Provided PodIP: '{podIp}' is nt valid.");
                 podIp = podIp.Replace('.', '-');
                 return new Uri($"{scheme}://{podIp}.{srv}.{ns}.svc.cluster.local:{port}/{path}");
-            }
-            else {
+            } else {
                 return new Uri($"{scheme}://{srv}.{ns}.svc.cluster.local:{port}/{path}");
             }
         }

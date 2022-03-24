@@ -26,7 +26,7 @@ namespace Pinger
             if (!started) {
                 _ = StartAsync();
                 started = true;
-            }                
+            }
         }
 
         private async Task StartAsync() {
@@ -38,8 +38,7 @@ namespace Pinger
                     var delay = Task.Delay(endpoint.Period, ct);
                     var cycle = PingCycleAsync(cancelCycle.Token);
                     await Task.WhenAll(cycle, delay);
-                }
-                catch (TaskCanceledException) {
+                } catch (TaskCanceledException) {
                     cancelCycle?.Cancel();
                 }
             }
@@ -57,8 +56,7 @@ namespace Pinger
                     endpoint.Success();
                 else
                     endpoint.Fail();
-            }
-            catch (Exception ex) when (ex is TaskCanceledException or HttpRequestException) {
+            } catch (Exception ex) when (ex is TaskCanceledException or HttpRequestException) {
                 endpoint.Fail();
             }
 

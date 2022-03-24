@@ -1,15 +1,13 @@
-﻿using k8s.Models;
-using KubernetesSyncronizer.Settings;
+﻿using KubernetesSyncronizer.Settings;
 using KubernetesSyncronizer.Util;
 using Pinger;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace KubernetesSyncronizer
 {
-    public class MonitoredService {
+    public class MonitoredService
+    {
         public MonitoredService(string name, ServiceConfigurationError errors) {
             Name = name;
             Errors = errors;
