@@ -25,5 +25,5 @@ jobs:
     - name: Build the Docker image
       run: docker build ./main/K8sMonitorCore --file ./main/K8sMonitorCore/K8sMonitorCore/Dockerfile --tag tiegris/k8s-monitor-core:latest
         
-    - name: Build and push
-      run: docker build push tiegris/k8s-monitor-core:latest
+    - name: Push
+      run: docker push tiegris/k8s-monitor-core:latest
