@@ -21,6 +21,8 @@ namespace KubernetesSyncronizer
 
         public void Add(V1Service service) {
             var resource = service.ExtractMonitoredService(defaults);
+            if (resource is null)
+                return;
 
             map.TryAdd(resource.Name, resource);
 

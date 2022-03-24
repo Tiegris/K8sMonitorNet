@@ -23,8 +23,9 @@ namespace K8sMonitorCore
             services.AddHttpClient();
 
             services.AddSingleton<PingerManager>();
-            services.AddHostedService<AutodiscoveryHostedService>();
+
             services.AddK8sClient();
+            services.AddK8sListening();
 
             services.Configure<Defaults>(
                 Configuration.GetSection("Defaults"));

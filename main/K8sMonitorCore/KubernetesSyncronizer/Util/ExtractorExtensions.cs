@@ -71,19 +71,12 @@ namespace KubernetesSyncronizer.Util
             return it.Status.PodIP;
         }
 
-        public static MonitoredService ExtractMonitoredService(this V1Service it, Defaults defaults) {
+        public static MonitoredService? ExtractMonitoredService(this V1Service it, Defaults defaults) {
             var dict = it.Metadata.Annotations;
             var errors = new ServiceConfigurationError();
 
-            if (!dict.TryGetValue(PATH, out string? path)) {
-                errors.Add(new ConfigurationErrorEntry(
-                                    PATH,
-                                    "",
-                                    ConfigurationErrorType.RequiredValueNotFound,
-                                    "You must define a Path!"
-                                ));
-                return new MonitoredService(it.ExtractFullName(), errors);
-            }
+            if (dict is null || !dict.TryGetValue(PATH, out string? path))
+                return null;
 
             errors.AddIfNotNull(TryExtract(it, PORT, defaults.Port, out int port));
             if (port <= 0 && port > 65535)

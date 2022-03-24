@@ -2,6 +2,18 @@
 {
     public class Defaults
     {
+        public Defaults() {
+            Timeout = 5;
+            Period = 60;
+            FailureThreshold = 2;
+            Port = 80;
+            Hpa = new Hpa {
+                Enabled = false,
+                Percentage = 100,
+            };
+            Scheme = "http";
+        }
+
         public Defaults(int timeout, int period, int failureThreshold, int port, Hpa hpa, string scheme) {
             Timeout = timeout;
             Period = period;

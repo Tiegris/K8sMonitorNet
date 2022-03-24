@@ -13,15 +13,11 @@ namespace KubernetesSyncronizer
     {
         private readonly IKubernetes client;
         private Watcher<V1Service>? watch;
-        private readonly PingerManager pingerManager;
-        private readonly Defaults defaults;
 
         private readonly ResourceRegistry resourceRegistry;
 
-        public K8sServiceConfigReader(IKubernetes k8s, PingerManager pingerManager, IOptions<Defaults> options, ResourceRegistry resourceRegistry) {
+        public K8sServiceConfigReader(IKubernetes k8s, ResourceRegistry resourceRegistry) {
             this.client = k8s;
-            this.pingerManager = pingerManager;
-            this.defaults = options.Value;
             this.resourceRegistry = resourceRegistry;
         }
 
@@ -35,6 +31,7 @@ namespace KubernetesSyncronizer
 
 
         private void WatchEventHandler(WatchEventType type, V1Service item) {
+            Console.WriteLine("Service: {0} {1}", item.Metadata.Name, type);
             switch (type) {
                 case Added:
                     resourceRegistry.Add(item);
@@ -50,7 +47,6 @@ namespace KubernetesSyncronizer
                     //TODO
                     break;
             }
-            Console.WriteLine("Service: {0} {1}", item.Metadata.Name, type);
         }
 
         #region Dispose

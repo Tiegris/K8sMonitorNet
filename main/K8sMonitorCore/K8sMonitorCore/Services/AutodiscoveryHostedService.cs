@@ -1,4 +1,5 @@
-﻿using KubernetesSyncronizer;
+﻿using k8s;
+using KubernetesSyncronizer;
 using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,14 +8,15 @@ namespace K8sMonitorCore.Services
 {
     public class AutodiscoveryHostedService : IHostedService
     {
-        K8sServiceConfigReader? discovery;
-        //IKubernetes client;
+        private readonly K8sServiceConfigReader discovery;
 
+        public AutodiscoveryHostedService(IKubernetes client, ResourceRegistry resourceRegistry) {
+            this.discovery = new K8sServiceConfigReader(
+                client, resourceRegistry);
+        }
 
-        public Task StartAsync(CancellationToken cancellationToken) {
-            //discovery = new K8sServiceConfigReader(
-            //    );
-            //discovery.StartAndForget();
+        public Task StartAsync(CancellationToken cancellationToken) {            
+            discovery.StartAndForget();
             return Task.CompletedTask;
         }
 

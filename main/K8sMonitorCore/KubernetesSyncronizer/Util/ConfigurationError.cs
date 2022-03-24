@@ -11,7 +11,7 @@ namespace KubernetesSyncronizer.Util
 
     public class ServiceConfigurationError
     {
-        List<ConfigurationErrorEntry> errors = new();
+        private readonly List<ConfigurationErrorEntry> errors = new();
 
         public bool HasErrors => errors.Count > 0;
 

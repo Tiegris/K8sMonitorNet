@@ -3,8 +3,9 @@ kind: Service
 metadata:
   name: wait-1
   annotations:
-    mnet.port: "8080"
-    mnet.path: "/health"
+    mnet.usi.scheme: "http"
+    mnet.uri.port: "8080"
+    mnet.uri.path: "/health"
     mnet.timeout: "4"
     mnet.period: "30"
     mnet.failureThreshold: "5"
