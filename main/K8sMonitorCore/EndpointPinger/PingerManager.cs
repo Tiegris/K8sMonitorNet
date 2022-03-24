@@ -25,10 +25,8 @@ namespace Pinger
         }
 
         public void UnregisterEndpoint(string name) {
-            bool success = map.TryRemove(name, out EndpointPinger? epp);
-            if (success && epp is not null) {
-                epp.Dispose();
-            }
+            map.TryRemove(name, out EndpointPinger? epp);
+            epp?.Dispose();
         }
 
         public List<EndpointStatusInfo> Scrape() {
@@ -36,8 +34,7 @@ namespace Pinger
             foreach (var item in map) {
                 ret.Add(new EndpointStatusInfo(
                     name: item.Key,
-                    statusCode: item.Value.Endpoint.Status,
-                    uri: item.Value.Endpoint.Uri
+                    endpoint: item.Value.Endpoint
                 ));
             }
             return ret;

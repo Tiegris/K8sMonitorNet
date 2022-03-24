@@ -21,8 +21,12 @@ namespace Pinger
             this.logger = loggerFactory.CreateLogger<EndpointPinger>();
         }
 
+        private bool started = false;
         internal void StartAndForget() {
-            _ = StartAsync();
+            if (!started) {
+                _ = StartAsync();
+                started = true;
+            }                
         }
 
         private async Task StartAsync() {
@@ -54,7 +58,7 @@ namespace Pinger
                 else
                     endpoint.Fail();
             }
-            catch (Exception ex) when (ex is TaskCanceledException || ex is HttpRequestException) {
+            catch (Exception ex) when (ex is TaskCanceledException or HttpRequestException) {
                 endpoint.Fail();
             }
 
@@ -70,8 +74,8 @@ namespace Pinger
         protected virtual void Dispose(bool disposing) {
             if (!disposed) {
                 if (disposing) {
-                    cancelObject?.Cancel();
-                    cancelObject?.Dispose();
+                    cancelObject.Cancel();
+                    cancelObject.Dispose();
                 }
 
                 disposed = true;

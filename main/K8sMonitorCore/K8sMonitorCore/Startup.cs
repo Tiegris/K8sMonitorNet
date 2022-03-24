@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KubernetesSyncronizer.Settings;
+using K8sMonitorCore.Services;
 
 namespace K8sMonitorCore
 {
@@ -30,6 +31,7 @@ namespace K8sMonitorCore
             services.AddHttpClient();
 
             services.AddSingleton<PingerManager>();
+            services.AddHostedService<AutodiscoveryHostedService>();
             services.AddK8sClient();
 
             services.Configure<Defaults>(

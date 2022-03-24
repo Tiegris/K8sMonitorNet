@@ -5,6 +5,7 @@ namespace Pinger
 {
     public class Endpoint
     {
+        public DateTime LastChecked { get; private set; }
         public StatusType Status { get; private set; }
         public int FailureThreshold { get; init; }
         public TimeSpan Timeout { get; init; }
@@ -28,6 +29,7 @@ namespace Pinger
         }
 
         internal void Fail() {
+            LastChecked = DateTime.Now;
             var temp = Interlocked.Increment(ref fails);
             if (temp >= FailureThreshold + 1) {
                 Status = StatusType.Dead;
@@ -39,6 +41,7 @@ namespace Pinger
         }
 
         internal void Success() {
+            LastChecked = DateTime.Now;
             Interlocked.Decrement(ref fails);
             if (fails <= 0) {
                 Status = StatusType.Healthy;

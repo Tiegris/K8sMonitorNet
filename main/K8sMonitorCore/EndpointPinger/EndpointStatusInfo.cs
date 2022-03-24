@@ -4,15 +4,17 @@ namespace Pinger
 {
     public class EndpointStatusInfo
     {
-        public EndpointStatusInfo(string name, Uri uri, StatusType statusCode) {
+        public EndpointStatusInfo(string name, Endpoint endpoint) {
             Name = name;
-            Uri = uri;
-            StatusCode = statusCode;
+            Uri = endpoint.Uri;
+            StatusCode = endpoint.Status;
+            LastChecked = endpoint.LastChecked;
         }
 
-        public string Name { get; init; }
-        public Uri Uri { get; init; }
-        public StatusType StatusCode { get; init; }
+        public string Name { get; internal init; }
+        public Uri Uri { get; internal init; }
+        public StatusType StatusCode { get; internal init; }
+        public DateTime LastChecked { get; internal init; }
         public string StatusString => StatusCode.ToString();
     }
 }

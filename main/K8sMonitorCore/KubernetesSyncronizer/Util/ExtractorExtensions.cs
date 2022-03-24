@@ -1,20 +1,17 @@
 ﻿using k8s.Models;
 using KubernetesSyncronizer.Settings;
-using KubernetesSyncronizer.Util;
-using Microsoft.Extensions.Options;
 using Pinger;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using static KubernetesSyncronizer.Util.Utils;
 
 namespace KubernetesSyncronizer.Util
 {
     public static class ExtractorExtensions
     {
-        const string PORT = "mnet.port";
-        const string PATH = "mnet.path";
+        const string PORT = "mnet.uri.port";
+        const string PATH = "mnet.uri.path";
+        const string SCHEME = "mnet.uri.scheme";
         const string TIMEOUT = "mnet.timeout";
         const string PERIOD = "mnet.period";
         const string FT = "mnet.failureThreshold";
@@ -22,7 +19,7 @@ namespace KubernetesSyncronizer.Util
         const string HPA_PERCENTAGE = "mnet.hpa.percentage";
 
         public static string? ExtractLabelString(this V1Service it) {
-            if (it.Spec == null || it.Spec.Selector == null)
+            if (it.Spec?.Selector is null)
                 return null;
 
             var labels = new List<string>();
@@ -33,60 +30,101 @@ namespace KubernetesSyncronizer.Util
             return labelStr;
         }
 
-        public static string ExtractName(this V1Service it) {
+        public static string ExtractFullName(this V1Service it) {
             return $"{it.Namespace()}::{it.Name()}";
         }
 
-        public static bool ExtractHpaEnabled(this V1Service it, Defaults defaults) {
-            var dict = it.Metadata.Annotations;
-            return dict.TryGetValue(HPA_ENABLED, out string? strHpaEnabled) ? 
-                bool.Parse(strHpaEnabled) : 
-                defaults.Hpa.Enabled;
+        #region TryExtract
+        private static ConfigurationErrorEntry? TryExtract(V1Service service, string key, bool tDefault, out bool value) {
+            var dict = service.Metadata.Annotations;
+            if (dict.TryGetValue(key, out string? strValue)) {
+                if (bool.TryParse(strValue, out bool tValue)) {
+                    value = tValue;
+                    return null;
+                } else {
+                    value = tDefault;
+                    return new ConfigurationErrorEntry(key, strValue, ConfigurationErrorType.ParseError);
+                }
+            } else {
+                value = tDefault;
+                return null;
+            }
         }
-        public static int ExtractHpaPercentage(this V1Service it, Defaults defaults) {
-            var dict = it.Metadata.Annotations;
-            return dict.TryGetValue(HPA_PERCENTAGE, out string? strHpaEnabled) ?
-                int.Parse(strHpaEnabled) :
-                defaults.Hpa.Percentage;
+
+        private static ConfigurationErrorEntry? TryExtract(V1Service service, string key, int tDefault, out int value) {
+            var dict = service.Metadata.Annotations;
+            if (dict.TryGetValue(key, out string? strValue)) {
+                if (int.TryParse(strValue, out int tValue)) {
+                    value = tValue;
+                    return null;
+                } else {
+                    value = tDefault;
+                    return new ConfigurationErrorEntry(key, strValue, ConfigurationErrorType.ParseError);
+                }
+            } else {
+                value = tDefault;
+                return null;
+            }
         }
+        #endregion
 
         public static string ExtractPodIp(this V1Pod it) {
             return it.Status.PodIP;
         }
 
-        public static Endpoint? ExtractEndpoint(this V1Service it, Defaults defaults) {
+        public static MonitoredService ExtractMonitoredService(this V1Service it, Defaults defaults) {
             var dict = it.Metadata.Annotations;
-            if (!dict.TryGetValue(PATH, out string? path))
-                return null;
+            var errors = new ServiceConfigurationError();
 
-            int port = defaults.Port;
-            if (dict.TryGetValue(PORT, out string? strPort))
-                port = int.Parse(strPort);
+            if (!dict.TryGetValue(PATH, out string? path)) {
+                errors.Add(new ConfigurationErrorEntry(
+                                    PATH,
+                                    "",
+                                    ConfigurationErrorType.RequiredValueNotFound,
+                                    "You must define a Path!"
+                                ));
+                return new MonitoredService(it.ExtractFullName(), errors);
+            }
 
+            errors.AddIfNotNull(TryExtract(it, PORT, defaults.Port, out int port));
             if (port <= 0 && port > 65535)
-                throw new K8sFqdnException("Port must be between 0 and 65535");
+                errors.Add(new ConfigurationErrorEntry(
+                    PORT, 
+                    port.ToString(), 
+                    ConfigurationErrorType.OutOfRangeError, 
+                    "Port must be between 0 and 65535"
+                ));
+
+            dict.TryGetValue(SCHEME, out string? scheme);
+            scheme ??= defaults.Scheme;
+            scheme = scheme.Replace("://", "");
+            if (scheme is not ("http" or "https"))
+                errors.Add(new ConfigurationErrorEntry(
+                    SCHEME,
+                    scheme,
+                    ConfigurationErrorType.OutOfRangeError,
+                    "Scheme must be either http or https"
+                ));
 
             string ns = it.Namespace();
             string srv = it.Name();
 
-            int timeout = defaults.Timeout;
-            if (dict.TryGetValue(TIMEOUT, out string? strTimeout))
-                timeout = int.Parse(strTimeout);
+            errors.AddIfNotNull(TryExtract(it, TIMEOUT, defaults.Timeout, out int timeout));
+            errors.AddIfNotNull(TryExtract(it, PERIOD, defaults.Period, out int period));
+            errors.AddIfNotNull(TryExtract(it, FT, defaults.FailureThreshold, out int failureThreshold));
+            errors.AddIfNotNull(TryExtract(it, HPA_ENABLED, defaults.Hpa.Enabled, out bool hpaEnabled));
+            errors.AddIfNotNull(TryExtract(it, HPA_PERCENTAGE, defaults.Hpa.Percentage, out int hpaPercentage));
 
-            int period = defaults.Period;
-            if (dict.TryGetValue(PERIOD, out string? strPeriod))
-                period = int.Parse(strPeriod);
-
-            int failureThreshold = defaults.FailureThreshold;
-            if (dict.TryGetValue(FT, out string? strFailureThreshold))
-                failureThreshold = int.Parse(strFailureThreshold);
-
-            return new Endpoint(
-                    timeout: new TimeSpan(0, 0, timeout),
-                    period: new TimeSpan(0, 0, period),
-                    failureThreshold: failureThreshold,
-                    uri: BuildFqdnUri(ns, srv, port, path)
-                );
+            return new(it.ExtractFullName(), errors) {
+                Timeout = new TimeSpan(0, 0, timeout),
+                Period = new TimeSpan(0, 0, period),
+                FailureThreshold = failureThreshold,
+                Uri = BuildFqdnUri(scheme, ns, srv, port, path),
+                Hpa = new Hpa {
+                    Enabled = hpaEnabled,
+                    Percentage = hpaPercentage
+                }
+            };
         }
 
     }

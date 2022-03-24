@@ -41,21 +41,20 @@ namespace KubernetesSyncronizer
         private void WatchEventHandler(WatchEventType type, V1Service item) {
             switch (type) {
                 case Added:
-                    resourceRegistry.Add(item.ExtractName(), item);
+                    resourceRegistry.Add(item);
                     break;
                 case Modified:
-                    resourceRegistry.Delete(item.ExtractName());
-                    resourceRegistry.Add(item.ExtractName(), item);
+                    resourceRegistry.Delete(item);
+                    resourceRegistry.Add(item);
                     break;
                 case Deleted:
-                    resourceRegistry.Delete(item.ExtractName());
+                    resourceRegistry.Delete(item);
                     break;
                 case Error:
                     //TODO
                     break;
             }
-            Console.WriteLine(type);
-            Console.WriteLine(item.Metadata.Name);
+            Console.WriteLine("Service: {0} {1}", item.Metadata.Name, type);
         }
 
         #region Dispose
