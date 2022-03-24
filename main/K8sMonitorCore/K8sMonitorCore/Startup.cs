@@ -27,6 +27,8 @@ namespace K8sMonitorCore
             services.AddK8sClient();
             services.AddK8sListening();
 
+            services.AddScoped<AggregatorService>();
+
             services.Configure<Defaults>(
                 Configuration.GetSection("Defaults"));
 

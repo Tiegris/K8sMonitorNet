@@ -3,7 +3,9 @@ using KubernetesSyncronizer.Settings;
 using KubernetesSyncronizer.Util;
 using Microsoft.Extensions.Options;
 using Pinger;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace KubernetesSyncronizer
 {
@@ -18,6 +20,7 @@ namespace KubernetesSyncronizer
         }
 
         private readonly ConcurrentDictionary<string, MonitoredService> map = new();
+        
 
         public void Add(V1Service service) {
             var resource = service.ExtractMonitoredService(defaults);
@@ -38,5 +41,8 @@ namespace KubernetesSyncronizer
                 foreach (var name in monitoredService.GetEndpointNames())
                     pinger.UnregisterEndpoint(name);
         }
+
+        public ICollection<MonitoredService> Values => map.Values;
+
     }
 }
