@@ -46,7 +46,7 @@ namespace Pinger
         }
 
         private async Task PingCycleAsync(CancellationToken cancelCycle) {
-            logger.LogInformation("Pinging cycle started for {enbdpoint}", endpoint.Uri);
+            logger.LogInformation("Pinging cycle started for {endpoint}", endpoint.Uri);
 
             using var client = hcf.CreateClient();
             client.Timeout = endpoint.Timeout;
@@ -60,7 +60,7 @@ namespace Pinger
                 endpoint.Fail();
             }
 
-            logger.LogInformation("Pinging cycle ended for {enbdpoint}", endpoint.Uri);
+            logger.LogInformation("Pinging cycle ended for {endpoint}", endpoint.Uri);
         }
 
         #region Dispose
