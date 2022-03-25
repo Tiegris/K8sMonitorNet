@@ -4,10 +4,10 @@ metadata:
   name: wait-1
   annotations:
     mnet.usi.scheme: "http://"
-    mnet.uri.port: "8080"
+    mnet.uri.port: "9000"
     mnet.uri.path: "health"
-    mnet.timeout: "4"
-    mnet.period: "30"
+    mnet.timeout: "1"
+    mnet.period: "3"
     mnet.failureThreshold: "5"
     mnet.hpa.enabled: "false"
     mnet.hpa.percent: "80"
