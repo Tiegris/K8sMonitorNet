@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: debugger
+spec:
+  selector:
+    app: debugger
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: debugger
+  labels:
+    app: debugger
+spec:
+  selector:
+    matchLabels:
+      app: debugger
+  template:
+    metadata:
+      labels:
+        app: debugger
+    spec:
+      containers:
+      - name: debugger
+        image: tiegris/dotnet-debugger
+        command: ["sleep", "7200"]
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+          - name: host-mount
+            mountPath: /app
+      volumes:
+        - name: host-mount
+          hostPath:
+            path: F:\UNI\MSc_Onlab_1\K8sMonitorNet\main\K8sMonitorCore\K8sMonitorCore\bin\Debug\net6.0
