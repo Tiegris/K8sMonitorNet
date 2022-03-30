@@ -1,5 +1,6 @@
 ﻿using k8s;
 using k8s.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using static k8s.WatchEventType;
@@ -12,10 +13,12 @@ namespace KubernetesSyncronizer
         private Watcher<V1Service>? watch;
 
         private readonly ResourceRegistry resourceRegistry;
+        private readonly ILogger<K8sServiceConfigReader> logger;
 
-        public K8sServiceConfigReader(IKubernetes k8s, ResourceRegistry resourceRegistry) {
+        public K8sServiceConfigReader(IKubernetes k8s, ResourceRegistry resourceRegistry, ILogger<K8sServiceConfigReader> logger) {
             this.client = k8s;
             this.resourceRegistry = resourceRegistry;
+            this.logger = logger;
         }
 
         public void StartAndForget() => _ = StartWathcingAsync();
@@ -28,7 +31,7 @@ namespace KubernetesSyncronizer
 
 
         private void WatchEventHandler(WatchEventType type, V1Service item) {
-            Console.WriteLine("Service: {0} {1}", item.Metadata.Name, type);
+            logger.LogInformation("Service: {name} {type}", item.Metadata.Name, type);
             switch (type) {
                 case Added:
                     resourceRegistry.Add(item);

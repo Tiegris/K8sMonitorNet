@@ -42,7 +42,9 @@ namespace KubernetesSyncronizer.Util
                     return null;
                 } else {
                     value = tDefault;
-                    return new ConfigurationErrorEntry(key, strValue, ConfigurationErrorType.ParseError);
+                    return new ConfigurationErrorEntry(key, strValue,
+                        ConfigurationErrorType.ParseError,
+                        $"Could not parse the value of {key} as boolean.");
                 }
             } else {
                 value = tDefault;
@@ -58,7 +60,9 @@ namespace KubernetesSyncronizer.Util
                     return null;
                 } else {
                     value = tDefault;
-                    return new ConfigurationErrorEntry(key, strValue, ConfigurationErrorType.ParseError);
+                    return new ConfigurationErrorEntry(key, strValue, 
+                        ConfigurationErrorType.ParseError, 
+                        $"Could not parse the value of {key} as integer.");
                 }
             } else {
                 value = tDefault;
@@ -79,12 +83,12 @@ namespace KubernetesSyncronizer.Util
                 return null;
 
             errors.AddIfNotNull(TryExtract(it, PORT, defaults.Port, out int port));
-            if (port <= 0 && port > 65535)
+            if (port is <= 0 or > 65535)
                 errors.Add(new ConfigurationErrorEntry(
                     PORT,
                     port.ToString(),
                     ConfigurationErrorType.OutOfRangeError,
-                    "Port must be between 0 and 65535"
+                    "Port must be between 0 and 65535."
                 ));
 
             dict.TryGetValue(SCHEME, out string? scheme);
@@ -95,7 +99,7 @@ namespace KubernetesSyncronizer.Util
                     SCHEME,
                     scheme,
                     ConfigurationErrorType.OutOfRangeError,
-                    "Scheme must be either http or https"
+                    "Scheme must be either http or https."
                 ));
 
             string ns = it.Namespace();
@@ -106,6 +110,14 @@ namespace KubernetesSyncronizer.Util
             errors.AddIfNotNull(TryExtract(it, FT, defaults.FailureThreshold, out int failureThreshold));
             errors.AddIfNotNull(TryExtract(it, HPA_ENABLED, defaults.Hpa.Enabled, out bool hpaEnabled));
             errors.AddIfNotNull(TryExtract(it, HPA_PERCENTAGE, defaults.Hpa.Percentage, out int hpaPercentage));
+            if (hpaPercentage is <= 0 or > 100)
+                errors.Add(new ConfigurationErrorEntry(
+                    PORT,
+                    port.ToString(),
+                    ConfigurationErrorType.OutOfRangeError,
+                    "Hpa percentage must be between 1 and 100."
+                ));
+
 
             return new(it.ExtractFullName(), errors) {
                 Timeout = new TimeSpan(0, 0, timeout),
