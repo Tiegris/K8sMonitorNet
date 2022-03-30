@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32126.315
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "K8sMonitorCore", "K8sMonitorCore\K8sMonitorCore.csproj", "{DA685421-F169-4BBA-AE32-F6FA9ED34EA5}"
 EndProject
@@ -9,12 +9,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndpointPinger", "EndpointP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndpointPingerTests", "EndpointPingerTests\EndpointPingerTests.csproj", "{21540DF8-D01C-4FDA-8D19-CA97B526CAB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KubernetesSyncronizer", "KubernetesSyncronizer\KubernetesSyncronizer.csproj", "{626A1D54-97A1-4E65-B4BB-A9CA7501444E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KubernetesSyncronizer", "KubernetesSyncronizer\KubernetesSyncronizer.csproj", "{626A1D54-97A1-4E65-B4BB-A9CA7501444E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{82499B77-EB9B-4850-9040-15F7BE4AD362}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{686D3A14-FFB8-45A5-8016-F329963CC93B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{63A64E48-94B9-4561-BCAA-68B45C5714D4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +45,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DA685421-F169-4BBA-AE32-F6FA9ED34EA5} = {63A64E48-94B9-4561-BCAA-68B45C5714D4}
+		{F24188BB-F3CB-40B6-9E4C-B9874F632860} = {63A64E48-94B9-4561-BCAA-68B45C5714D4}
+		{21540DF8-D01C-4FDA-8D19-CA97B526CAB3} = {686D3A14-FFB8-45A5-8016-F329963CC93B}
+		{626A1D54-97A1-4E65-B4BB-A9CA7501444E} = {63A64E48-94B9-4561-BCAA-68B45C5714D4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A8C99B1A-E011-43EE-93FD-AB781291C5F8}
