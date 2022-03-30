@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: debugger
-        image: tiegris/dotnet-debugger
+        image: mcr.microsoft.com/dotnet/aspnet:6.0
         command: ["sleep", "7200"]
         resources:
           limits:
@@ -35,10 +35,4 @@ spec:
             cpu: "500m"
         ports:
         - containerPort: 8080
-        volumeMounts:
-          - name: host-mount
-            mountPath: /app
-      volumes:
-        - name: host-mount
-          hostPath:
-            path: F:\UNI\MSc_Onlab_1\K8sMonitorNet\main\K8sMonitorCore\K8sMonitorCore\bin\Debug\net6.0
+
