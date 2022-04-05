@@ -9,11 +9,13 @@ public class EndpointStatusInfo
         Uri = endpoint.Uri;
         StatusCode = endpoint.Status;
         LastChecked = endpoint.LastChecked;
+        LastError = endpoint.LastError;
     }
 
     public string Name { get; internal init; }
     public Uri Uri { get; internal init; }
     public StatusType StatusCode { get; internal init; }
     public DateTime LastChecked { get; internal init; }
+    public string? LastError { get; internal init; }
     public string StatusString => StatusCode.ToString();
 }

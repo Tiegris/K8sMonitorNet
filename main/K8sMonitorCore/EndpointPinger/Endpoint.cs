@@ -6,6 +6,8 @@ namespace Pinger;
 public class Endpoint
 {
     public DateTime LastChecked { get; private set; }
+    public string? LastError { get; private set; }
+
     public StatusType Status { get; private set; }
     public int FailureThreshold { get; init; }
     public TimeSpan Timeout { get; init; }
@@ -28,7 +30,8 @@ public class Endpoint
         Uri = uri;
     }
 
-    internal void Fail() {
+    internal void Fail(string reason) {
+        LastError = reason;
         LastChecked = DateTime.Now;
         var temp = Interlocked.Increment(ref fails);
         if (temp >= FailureThreshold + 1) {
@@ -43,6 +46,7 @@ public class Endpoint
         LastChecked = DateTime.Now;
         Interlocked.Decrement(ref fails);
         if (fails <= 0) {
+            LastError = null;
             Status = StatusType.Healthy;
             Interlocked.Exchange(ref fails, 0);
         } else {

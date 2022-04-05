@@ -15,9 +15,9 @@ public class EndpointTests_1
         Endpoint ep = new() {
             FailureThreshold = 0,
         };
-        ep.Fail();
+        ep.Fail("");
         Assert.AreEqual(StatusType.Dead, ep.Status);
-        ep.Fail();
+        ep.Fail("");
         Assert.AreEqual(StatusType.Dead, ep.Status);
         ep.Success();
         Assert.AreEqual(StatusType.Healthy, ep.Status);
@@ -28,9 +28,9 @@ public class EndpointTests_1
         Endpoint ep = new() {
             FailureThreshold = 1,
         };
-        ep.Fail();
+        ep.Fail("");
         Assert.AreEqual(StatusType.Dying, ep.Status);
-        ep.Fail();
+        ep.Fail("");
         Assert.AreEqual(StatusType.Dead, ep.Status);
         ep.Success();
         Assert.AreEqual(StatusType.Recovering, ep.Status);
@@ -48,7 +48,7 @@ public class EndpointTests_1
         Assert.AreEqual(StatusType.Healthy, ep.Status);
         ep.Success();
         Assert.AreEqual(StatusType.Healthy, ep.Status);
-        ep.Fail();
+        ep.Fail("");
         Assert.AreEqual(StatusType.Dying, ep.Status);
         ep.Success();
         Assert.AreEqual(StatusType.Healthy, ep.Status);

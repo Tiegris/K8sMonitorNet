@@ -55,9 +55,9 @@ internal class EndpointPinger : IDisposable
             if (response.IsSuccessStatusCode)
                 endpoint.Success();
             else
-                endpoint.Fail();
+                endpoint.Fail($"StatusCode: {(int)response.StatusCode}, ReasonPhrase: {response.ReasonPhrase}");
         } catch (Exception ex) when (ex is TaskCanceledException or HttpRequestException) {
-            endpoint.Fail();
+            endpoint.Fail(ex.Message);
         }
 
         logger.LogInformation("Pinging cycle ended for {endpoint}", endpoint.Uri);
