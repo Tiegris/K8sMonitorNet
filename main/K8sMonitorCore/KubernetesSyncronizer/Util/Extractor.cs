@@ -1,5 +1,7 @@
-﻿using k8s.Models;
+﻿using k8s;
+using k8s.Models;
 using KubernetesSyncronizer.Data;
+using KubernetesSyncronizer.Services;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -22,9 +24,13 @@ internal class Extractor
     const string HPA_PERCENTAGE = "mnet.hpa.percentage";
 
     private readonly Defaults defaults;
+    private readonly IKubernetes k8s;
+    private readonly ResourceRegistry resourceRegistry;
 
-    public Extractor(IOptions<Defaults> options) {
-        defaults = options.Value;
+    public Extractor(IOptions<Defaults> options, IKubernetes k8s, ResourceRegistry resourceRegistry) {
+        this.defaults = options.Value;
+        this.k8s = k8s;
+        this.resourceRegistry = resourceRegistry;
     }
 
     public MonitoredService? TryExtractMonitoredService(V1Service it) {
@@ -69,8 +75,9 @@ internal class Extractor
                 "Hpa percentage must be between 1 and 100."
             ));
 
+        var srvName = it.ExtractFullName();
 
-        return new(it.ExtractFullName(), errors) {
+        return new(srvName, errors) {
             Timeout = new TimeSpan(0, 0, timeout),
             Period = new TimeSpan(0, 0, period),
             FailureThreshold = failureThreshold,
@@ -78,8 +85,10 @@ internal class Extractor
             Hpa = new Hpa {
                 Enabled = hpaEnabled,
                 Percentage = hpaPercentage
-            }
+            },
+            PodMonitor = hpaEnabled ? new(k8s, resourceRegistry, srvName) : null
         };
+
     }
 
 }

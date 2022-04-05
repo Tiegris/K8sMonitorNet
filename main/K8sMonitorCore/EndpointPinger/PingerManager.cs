@@ -16,6 +16,7 @@ public class PingerManager
         this.hcf = hcf;
         this.lf = lf;
     }
+    public ICollection<string> EndpointNames => map.Keys;
 
     public string RegisterEndpoint(string name, Endpoint endpoint) {
         var epp = new EndpointPinger(endpoint, hcf, lf);

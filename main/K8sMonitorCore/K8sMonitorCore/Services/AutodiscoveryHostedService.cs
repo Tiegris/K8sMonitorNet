@@ -9,11 +9,11 @@ namespace K8sMonitorCore.Services;
 
 public class AutodiscoveryHostedService : IHostedService
 {
-    private readonly ConfigReader discovery;
+    private readonly ServiceMonitor discovery;
 
     public AutodiscoveryHostedService(IKubernetes client, ResourceRegistry resourceRegistry, ILoggerFactory loggerFactory) {
-        this.discovery = new ConfigReader(
-            client, resourceRegistry, loggerFactory.CreateLogger<ConfigReader>());
+        this.discovery = new ServiceMonitor(
+            client, resourceRegistry, loggerFactory.CreateLogger<ServiceMonitor>());
     }
 
     public Task StartAsync(CancellationToken cancellationToken) {

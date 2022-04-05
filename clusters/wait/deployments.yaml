@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: wait-1
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: wait-1
@@ -12,7 +13,7 @@ spec:
         app: wait-1
     spec:
       containers:
-      - name: wait-1
+      - name: wait-1        
         image: tiegris/wait-api
         resources:
           limits:

@@ -1,6 +1,7 @@
 ﻿using k8s.Models;
 using KubernetesSyncronizer.Data;
 using System;
+using static KubernetesSyncronizer.Util.ExtractorHelper;
 
 namespace KubernetesSyncronizer.Util;
 internal static class ExtractorHelper {
@@ -47,14 +48,6 @@ internal static class ExtractorHelper {
         scheme = scheme.Replace("://", "");
 
         return new Uri($"{scheme}://{srv}.{ns}.svc.cluster.local:{port}/{path}");
-    }
-
-    internal static Uri BuildFqdnUri(string scheme, string ns, string srv, int port, string path, string podIp) {
-        path = path.TrimStart('/');
-        scheme = scheme.Replace("://", "");
-
-        podIp = podIp.Replace('.', '-');
-        return new Uri($"{scheme}://{podIp}.{srv}.{ns}.svc.cluster.local:{port}/{path}");
     }
 
 }

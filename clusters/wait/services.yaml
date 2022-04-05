@@ -3,14 +3,14 @@ kind: Service
 metadata:
   name: wait-1
   annotations:
-    mnet.uri.scheme: "tcp://"
-    mnet.uri.port: "900000"
+    mnet.uri.scheme: "http://"
+    mnet.uri.port: "9000"
     mnet.uri.path: "/Wait"
-    mnet.timeout: "das"
-    mnet.period: "apples"
-    mnet.failureThreshold: "five"
+    mnet.timeout: "2"
+    mnet.period: "5"
+    mnet.failureThreshold: "3"
     mnet.hpa.enabled: "yes"
-    mnet.hpa.percentage: "800"
+    mnet.hpa.percentage: "70"
 spec:
   selector:
     app: wait-1
@@ -25,7 +25,7 @@ metadata:
   annotations:
     mnet.uri.scheme: "http"
     mnet.uri.port: "9001"
-    mnet.uri.path: "Wait"
+    #mnet.uri.path: "Wait"
     mnet.timeout: "1"
     mnet.period: "3"
     mnet.failureThreshold: "5"

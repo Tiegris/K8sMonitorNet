@@ -16,18 +16,18 @@ public partial class AggregationService
         var statusInfos = pingerManager.Scrape();
         var resources = resourceRegistry.Values;
 
-        return resources.Select(a => new ServiceInfoDto(
-            a.Name,
-            a.Errors,
-            statusInfos.Where(b => a.Name == b.Name).FirstOrDefault().ToDto(),
-            a.Errors.HasErrors ?
+        return resources.Select(service => new ServiceInfoDto(
+            service.Name,
+            service.Errors,
+            statusInfos.Where(endpoint => endpoint.Name.Contains(service.Name)).FirstOrDefault().ToDto(),
+            service.Errors.HasErrors ?
             null :
             new ServiceSettingsDto(
-                a.FailureThreshold,
-                a.Timeout,
-                a.Period,
-                a.Uri,
-                a.Hpa
+                service.FailureThreshold,
+                service.Timeout,
+                service.Period,
+                service.Uri,
+                service.Hpa
             )
         )).ToList();
     }

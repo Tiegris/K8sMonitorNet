@@ -6,42 +6,36 @@ using System.Threading.Tasks;
 using static k8s.WatchEventType;
 
 namespace KubernetesSyncronizer.Services;
-
-public class ConfigReader : IDisposable
-{
+internal class PodMonitor : IDisposable {
+    private readonly string serviceKey;
     private readonly IKubernetes client;
-    private Watcher<V1Service>? watch;
-
     private readonly ResourceRegistry resourceRegistry;
-    private readonly ILogger<ConfigReader> logger;
+    private Watcher<V1Pod>? watch;
 
-    public ConfigReader(IKubernetes k8s, ResourceRegistry resourceRegistry, ILogger<ConfigReader> logger) {
+    internal PodMonitor(IKubernetes k8s, ResourceRegistry resourceRegistry, string serviceKey) {
         client = k8s;
         this.resourceRegistry = resourceRegistry;
-        this.logger = logger;
+        this.serviceKey = serviceKey;
     }
 
-    public void StartWatching() {
-        var podlistResp = client.ListServiceForAllNamespacesWithHttpMessagesAsync(watch: true);
-        watch = podlistResp.Watch<V1Service, V1ServiceList>(WatchEventHandler);
+    internal void StartWatching(string selector) {
+        var podlistResp = client.ListPodForAllNamespacesWithHttpMessagesAsync(watch: true, labelSelector: selector);
+        watch = podlistResp.Watch<V1Pod, V1PodList>(WatchEventHandler);
     }
 
-
-    private void WatchEventHandler(WatchEventType type, V1Service item) {
-        logger.LogInformation("Service: {name} {type}", item.Name(), type);
+    private void WatchEventHandler(WatchEventType type, V1Pod item) {
         switch (type) {
             case Added:
-                resourceRegistry.Add(item);
+                resourceRegistry.AddPod(serviceKey, item);
                 break;
             case Modified:
-                resourceRegistry.Delete(item);
-                resourceRegistry.Add(item);
+                resourceRegistry.DeletePod(serviceKey, item);
+                resourceRegistry.AddPod(serviceKey, item);
                 break;
             case Deleted:
-                resourceRegistry.Delete(item);
+                resourceRegistry.DeletePod(serviceKey, item);
                 break;
-            case Error:
-                logger.LogError("Kubernetes watch error: {type} {item}", type, item.Name());
+            case Error:                
                 break;
         }
     }
