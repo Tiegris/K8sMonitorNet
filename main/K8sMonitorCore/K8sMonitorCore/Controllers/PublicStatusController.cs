@@ -1,5 +1,4 @@
 ﻿using K8sMonitorCore.Aggregation.Service;
-using K8sMonitorCore.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,7 @@ public class PublicStatusController : ControllerBase
             return StatusCode(404, "NotFound");
         } catch (Exception e) {
             return StatusCode(500, "");
-        }        
+        }
     }
 
 }

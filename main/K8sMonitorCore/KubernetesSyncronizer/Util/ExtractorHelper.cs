@@ -1,10 +1,10 @@
 ﻿using k8s.Models;
 using KubernetesSyncronizer.Data;
 using System;
-using static KubernetesSyncronizer.Util.ExtractorHelper;
 
 namespace KubernetesSyncronizer.Util;
-internal static class ExtractorHelper {
+internal static class ExtractorHelper
+{
     #region TryExtract
     internal static ConfigurationErrorEntry? TryExtract(V1Service service, string key, bool tDefault, out bool value) {
         var dict = service.Metadata.Annotations;

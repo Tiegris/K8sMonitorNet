@@ -4,11 +4,7 @@ using KubernetesSyncronizer.Data;
 using KubernetesSyncronizer.Services;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static KubernetesSyncronizer.Util.ExtractorHelper;
 
 namespace KubernetesSyncronizer.Util;
@@ -82,7 +78,7 @@ internal class Extractor
 
         var srvName = it.ExtractFullName();
 
-        monitoredService =  new(srvName, errors) {
+        monitoredService = new(srvName, errors) {
             Timeout = new TimeSpan(0, 0, timeout),
             Period = new TimeSpan(0, 0, period),
             FailureThreshold = failureThreshold,

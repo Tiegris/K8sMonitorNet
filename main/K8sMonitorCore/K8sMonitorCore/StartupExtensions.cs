@@ -8,7 +8,7 @@ namespace K8sMonitorCore;
 public static class StartupExtensions
 {
     public static IServiceCollection AddK8sClient(this IServiceCollection services) {
-        KubernetesClientConfiguration config = KubernetesClientConfiguration.IsInCluster()?
+        KubernetesClientConfiguration config = KubernetesClientConfiguration.IsInCluster() ?
              KubernetesClientConfiguration.InClusterConfig() :
              KubernetesClientConfiguration.BuildConfigFromConfigFile();
 

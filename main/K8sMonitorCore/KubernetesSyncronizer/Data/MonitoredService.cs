@@ -2,7 +2,6 @@
 using KubernetesSyncronizer.Services;
 using Pinger;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using static KubernetesSyncronizer.Util.ExtractorExtensions;
 
@@ -42,11 +41,11 @@ public class MonitoredService : IDisposable
     }
 
     public bool TryGetEndpoint([MaybeNullWhen(false)] out string name, [MaybeNullWhen(false)] out Endpoint endpoint) {
-        if (Errors.HasErrors || Uri is null || Hpa is { Enabled: true}) {
+        if (Errors.HasErrors || Uri is null || Hpa is { Enabled: true }) {
             name = null;
             endpoint = null;
             return false;
-        }            
+        }
 
         name = Name;
         endpoint = new Endpoint(FailureThreshold, Timeout, Period, Uri);

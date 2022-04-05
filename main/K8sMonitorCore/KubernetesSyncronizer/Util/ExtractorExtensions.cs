@@ -1,5 +1,4 @@
 ﻿using k8s.Models;
-using KubernetesSyncronizer.Data;
 using System;
 using System.Collections.Generic;
 

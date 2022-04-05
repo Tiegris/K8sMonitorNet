@@ -1,12 +1,11 @@
 ﻿using k8s;
 using k8s.Models;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
 using static k8s.WatchEventType;
 
 namespace KubernetesSyncronizer.Services;
-internal class PodMonitor : IDisposable {
+internal class PodMonitor : IDisposable
+{
     private readonly string serviceKey;
     private readonly string selector;
     private readonly IKubernetes client;
@@ -37,7 +36,7 @@ internal class PodMonitor : IDisposable {
             case Deleted:
                 resourceRegistry.DeletePod(serviceKey, item);
                 break;
-            case Error:                
+            case Error:
                 break;
         }
     }

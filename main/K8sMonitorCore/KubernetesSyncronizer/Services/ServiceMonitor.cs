@@ -2,7 +2,6 @@
 using k8s.Models;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
 using static k8s.WatchEventType;
 
 namespace KubernetesSyncronizer.Services;
