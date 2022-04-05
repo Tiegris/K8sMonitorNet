@@ -1,11 +1,10 @@
-﻿namespace Pinger
+﻿namespace Pinger;
+
+public enum StatusType
 {
-    public enum StatusType
-    {
-        Unknown = 0,
-        Healthy = 1,
-        Dying = 2,
-        Dead = 3,
-        Recovering = 4,
-    }
+    Unknown = 0,
+    Healthy = 1,
+    Dying = 2,
+    Dead = 3,
+    Recovering = 4,
 }

@@ -3,24 +3,23 @@ using K8sMonitorCore.Services;
 using KubernetesSyncronizer;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace K8sMonitorCore
+namespace K8sMonitorCore;
+
+public static class StartupExtensions
 {
-    public static class StartupExtensions
-    {
-        public static IServiceCollection AddK8sClient(this IServiceCollection services) {
-            KubernetesClientConfiguration config = KubernetesClientConfiguration.IsInCluster()?
-                 KubernetesClientConfiguration.InClusterConfig() :
-                 KubernetesClientConfiguration.BuildConfigFromConfigFile();
+    public static IServiceCollection AddK8sClient(this IServiceCollection services) {
+        KubernetesClientConfiguration config = KubernetesClientConfiguration.IsInCluster()?
+             KubernetesClientConfiguration.InClusterConfig() :
+             KubernetesClientConfiguration.BuildConfigFromConfigFile();
 
-            IKubernetes client = new Kubernetes(config);
-            services.AddSingleton<IKubernetes>(client);
-            return services;
-        }
+        IKubernetes client = new Kubernetes(config);
+        services.AddSingleton<IKubernetes>(client);
+        return services;
+    }
 
-        public static IServiceCollection AddK8sListening(this IServiceCollection services) {
-            services.AddSingleton<ResourceRegistry>();
-            services.AddHostedService<AutodiscoveryHostedService>();
-            return services;
-        }
+    public static IServiceCollection AddK8sListening(this IServiceCollection services) {
+        services.AddSingleton<ResourceRegistry>();
+        services.AddHostedService<AutodiscoveryHostedService>();
+        return services;
     }
 }

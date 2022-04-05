@@ -1,9 +1,8 @@
-﻿namespace K8sMonitorCore.Aggregation
+﻿namespace K8sMonitorCore.Aggregation;
+
+public class List
 {
-    public class List
-    {
 
 
 
-    }
 }
