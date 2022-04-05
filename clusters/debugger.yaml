@@ -6,8 +6,12 @@ spec:
   selector:
     app: debugger
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 80
+    name: "http"
+    targetPort: 80
+  - port: 5000
+    name: "http-debug"
+    targetPort: 5000
 
 ---
 apiVersion: apps/v1
@@ -34,5 +38,6 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         ports:
-        - containerPort: 8080
+        - containerPort: 5000
+        - containerPort: 80
 
