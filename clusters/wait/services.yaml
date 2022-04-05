@@ -4,12 +4,12 @@ metadata:
   name: wait-1
   annotations:
     mnet.uri.scheme: "http://"
-    mnet.uri.port: "9000"
+    mnet.uri.port: "80"
     mnet.uri.path: "/Wait"
-    mnet.timeout: "2"
-    mnet.period: "5"
+    mnet.timeout: "5"
+    mnet.period: "10"
     mnet.failureThreshold: "3"
-    mnet.hpa.enabled: "yes"
+    mnet.hpa.enabled: "true"
     mnet.hpa.percentage: "70"
 spec:
   selector:
