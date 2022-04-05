@@ -1,4 +1,4 @@
-﻿using KubernetesSyncronizer.Settings;
+﻿using KubernetesSyncronizer.Data;
 using System;
 
 namespace K8sMonitorCore.Domain;

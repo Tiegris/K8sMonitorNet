@@ -1,4 +1,4 @@
-﻿namespace KubernetesSyncronizer.Settings;
+﻿namespace KubernetesSyncronizer.Data;
 
 public class Defaults
 {

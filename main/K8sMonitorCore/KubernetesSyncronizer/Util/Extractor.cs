@@ -1,12 +1,16 @@
 ﻿using k8s.Models;
 using KubernetesSyncronizer.Data;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using static KubernetesSyncronizer.Util.Utils;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static KubernetesSyncronizer.Util.ExtractorHelper;
 
 namespace KubernetesSyncronizer.Util;
 
-public static class ExtractorExtensions
+internal class Extractor
 {
     const string PORT = "mnet.uri.port";
     const string PATH = "mnet.uri.path";
@@ -17,65 +21,13 @@ public static class ExtractorExtensions
     const string HPA_ENABLED = "mnet.hpa.enabled";
     const string HPA_PERCENTAGE = "mnet.hpa.percentage";
 
-    public static string? ExtractLabelString(this V1Service it) {
-        if (it.Spec?.Selector is null)
-            return null;
+    private readonly Defaults defaults;
 
-        var labels = new List<string>();
-        foreach (var key in it.Spec.Selector)
-            labels.Add(key.Key + "=" + key.Value);
-
-        var labelStr = string.Join(",", labels.ToArray());
-        return labelStr;
+    public Extractor(IOptions<Defaults> options) {
+        defaults = options.Value;
     }
 
-    public static string ExtractFullName(this V1Service it) {
-        return $"{it.Namespace()}::{it.Name()}";
-    }
-
-    #region TryExtract
-    private static ConfigurationErrorEntry? TryExtract(V1Service service, string key, bool tDefault, out bool value) {
-        var dict = service.Metadata.Annotations;
-        if (dict.TryGetValue(key, out string? strValue)) {
-            if (bool.TryParse(strValue, out bool tValue)) {
-                value = tValue;
-                return null;
-            } else {
-                value = tDefault;
-                return new ConfigurationErrorEntry(key, strValue,
-                    ConfigurationErrorType.ParseError,
-                    $"Could not parse the value of {key} as boolean.");
-            }
-        } else {
-            value = tDefault;
-            return null;
-        }
-    }
-
-    private static ConfigurationErrorEntry? TryExtract(V1Service service, string key, int tDefault, out int value) {
-        var dict = service.Metadata.Annotations;
-        if (dict.TryGetValue(key, out string? strValue)) {
-            if (int.TryParse(strValue, out int tValue)) {
-                value = tValue;
-                return null;
-            } else {
-                value = tDefault;
-                return new ConfigurationErrorEntry(key, strValue, 
-                    ConfigurationErrorType.ParseError, 
-                    $"Could not parse the value of {key} as integer.");
-            }
-        } else {
-            value = tDefault;
-            return null;
-        }
-    }
-    #endregion
-
-    public static string ExtractPodIp(this V1Pod it) {
-        return it.Status.PodIP;
-    }
-
-    public static MonitoredService? TryExtractMonitoredService(this V1Service it, Defaults defaults) {
+    public MonitoredService? TryExtractMonitoredService(V1Service it) {
         var dict = it.Metadata.Annotations;
         var errors = new ServiceConfigurationError();
 
@@ -93,7 +45,6 @@ public static class ExtractorExtensions
 
         dict.TryGetValue(SCHEME, out string? scheme);
         scheme ??= defaults.Scheme;
-        scheme = scheme.Replace("://", "");
         if (scheme is not ("http" or "https"))
             errors.Add(new ConfigurationErrorEntry(
                 SCHEME,

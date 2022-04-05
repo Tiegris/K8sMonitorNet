@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KubernetesSyncronizer.Util;
+namespace KubernetesSyncronizer.Data;
 
 public enum ConfigurationErrorType
 {

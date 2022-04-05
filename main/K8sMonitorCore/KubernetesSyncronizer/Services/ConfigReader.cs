@@ -5,26 +5,23 @@ using System;
 using System.Threading.Tasks;
 using static k8s.WatchEventType;
 
-namespace KubernetesSyncronizer;
+namespace KubernetesSyncronizer.Services;
 
-public class K8sServiceConfigReader : IDisposable
+public class ConfigReader : IDisposable
 {
     private readonly IKubernetes client;
     private Watcher<V1Service>? watch;
 
     private readonly ResourceRegistry resourceRegistry;
-    private readonly ILogger<K8sServiceConfigReader> logger;
+    private readonly ILogger<ConfigReader> logger;
 
-    public K8sServiceConfigReader(IKubernetes k8s, ResourceRegistry resourceRegistry, ILogger<K8sServiceConfigReader> logger) {
-        this.client = k8s;
+    public ConfigReader(IKubernetes k8s, ResourceRegistry resourceRegistry, ILogger<ConfigReader> logger) {
+        client = k8s;
         this.resourceRegistry = resourceRegistry;
         this.logger = logger;
     }
 
-    public void StartAndForget() => _ = StartWathcingAsync();
-
-    private async Task StartWathcingAsync() {
-        var nss = await client.ListNamespaceAsync();
+    public void StartWatching() {
         var podlistResp = client.ListServiceForAllNamespacesWithHttpMessagesAsync(watch: true);
         watch = podlistResp.Watch<V1Service, V1ServiceList>(WatchEventHandler);
     }

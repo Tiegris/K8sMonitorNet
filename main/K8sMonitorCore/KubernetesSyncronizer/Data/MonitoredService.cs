@@ -1,10 +1,8 @@
-﻿using KubernetesSyncronizer.Settings;
-using KubernetesSyncronizer.Util;
-using Pinger;
+﻿using Pinger;
 using System;
 using System.Collections.Generic;
 
-namespace KubernetesSyncronizer;
+namespace KubernetesSyncronizer.Data;
 
 public class MonitoredService
 {

@@ -1,6 +1,6 @@
 ﻿using k8s;
 using K8sMonitorCore.Services;
-using KubernetesSyncronizer;
+using KubernetesSyncronizer.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace K8sMonitorCore;

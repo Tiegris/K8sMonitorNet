@@ -1,5 +1,5 @@
 using K8sMonitorCore.Aggregation.Service;
-using KubernetesSyncronizer.Settings;
+using KubernetesSyncronizer.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

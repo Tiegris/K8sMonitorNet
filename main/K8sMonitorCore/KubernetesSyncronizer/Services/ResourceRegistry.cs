@@ -1,27 +1,27 @@
 ﻿using k8s.Models;
-using KubernetesSyncronizer.Settings;
+using KubernetesSyncronizer.Data;
 using KubernetesSyncronizer.Util;
 using Microsoft.Extensions.Options;
 using Pinger;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace KubernetesSyncronizer;
+namespace KubernetesSyncronizer.Services;
 
 public class ResourceRegistry
 {
     private readonly PingerManager pinger;
-    private readonly Defaults defaults;
+    private readonly Extractor extractor;
 
     public ResourceRegistry(PingerManager pinger, IOptions<Defaults> options) {
         this.pinger = pinger;
-        this.defaults = options.Value;
+        this.extractor = new Extractor(options);
     }
 
     private readonly ConcurrentDictionary<string, MonitoredService> map = new();
 
     public void Add(V1Service service) {
-        var resource = service.ExtractMonitoredService(defaults);
+        var resource = extractor.TryExtractMonitoredService(service);
         if (resource is null)
             return;
 
