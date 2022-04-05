@@ -27,21 +27,25 @@ public class ServiceMonitor : IDisposable
 
 
     private void WatchEventHandler(WatchEventType type, V1Service item) {
-        logger.LogInformation("Service: {name} {type}", item.Name(), type);
-        switch (type) {
-            case Added:
-                resourceRegistry.AddService(item);
-                break;
-            case Modified:
-                resourceRegistry.DeleteService(item);
-                resourceRegistry.AddService(item);
-                break;
-            case Deleted:
-                resourceRegistry.DeleteService(item);
-                break;
-            case Error:
-                logger.LogError("Kubernetes watch error: {type} {item}", type, item.Name());
-                break;
+        try {
+            logger.LogInformation("Service: {name} {type}", item.Name(), type);
+            switch (type) {
+                case Added:
+                    resourceRegistry.AddService(item);
+                    break;
+                case Modified:
+                    resourceRegistry.DeleteService(item);
+                    resourceRegistry.AddService(item);
+                    break;
+                case Deleted:
+                    resourceRegistry.DeleteService(item);
+                    break;
+                case Error:
+                    logger.LogError("Kubernetes watch error: {type} {item}", type, item.Name());
+                    break;
+            }
+        } catch (Exception ex) {
+            logger.LogCritical("Exception occured in service watch callback: {message}", ex.Message);
         }
     }
 

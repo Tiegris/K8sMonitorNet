@@ -1,5 +1,6 @@
 ﻿using k8s;
 using k8s.Models;
+using Microsoft.Extensions.Logging;
 using System;
 using static k8s.WatchEventType;
 
@@ -8,15 +9,17 @@ internal class PodMonitor : IDisposable
 {
     private readonly string serviceKey;
     private readonly string selector;
+    private readonly ILogger<PodMonitor> logger;
     private readonly IKubernetes client;
     private readonly ResourceRegistry resourceRegistry;
     private Watcher<V1Pod>? watch;
 
-    internal PodMonitor(IKubernetes k8s, ResourceRegistry resourceRegistry, string serviceKey, string selector) {
+    internal PodMonitor(IKubernetes k8s, ResourceRegistry resourceRegistry, string serviceKey, string selector, ILogger<PodMonitor> logger) {
         client = k8s;
         this.resourceRegistry = resourceRegistry;
         this.serviceKey = serviceKey;
         this.selector = selector;
+        this.logger = logger;
     }
 
     internal void StartWatching() {
@@ -25,19 +28,24 @@ internal class PodMonitor : IDisposable
     }
 
     private void WatchEventHandler(WatchEventType type, V1Pod item) {
-        switch (type) {
-            case Added:
-                resourceRegistry.AddPod(serviceKey, item);
-                break;
-            case Modified:
-                resourceRegistry.DeletePod(serviceKey, item);
-                resourceRegistry.AddPod(serviceKey, item);
-                break;
-            case Deleted:
-                resourceRegistry.DeletePod(serviceKey, item);
-                break;
-            case Error:
-                break;
+        try {
+            logger.LogInformation("Pod: {name} {type}", item.Name(), type);
+            switch (type) {
+                case Added:
+                    resourceRegistry.AddPod(serviceKey, item);
+                    break;
+                case Modified:
+                    resourceRegistry.DeletePod(serviceKey, item);
+                    resourceRegistry.AddPod(serviceKey, item);
+                    break;
+                case Deleted:
+                    resourceRegistry.DeletePod(serviceKey, item);
+                    break;
+                case Error:
+                    break;
+            }
+        } catch (Exception ex) {
+            logger.LogCritical("Exception occured in pod watch callback: {message}", ex.Message);
         }
     }
 

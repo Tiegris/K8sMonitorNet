@@ -2,6 +2,7 @@
 using k8s.Models;
 using KubernetesSyncronizer.Data;
 using KubernetesSyncronizer.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -23,11 +24,13 @@ internal class Extractor
     private readonly Defaults defaults;
     private readonly IKubernetes k8s;
     private readonly ResourceRegistry resourceRegistry;
+    private readonly ILoggerFactory loggerFactory;
 
-    public Extractor(IOptions<Defaults> options, IKubernetes k8s, ResourceRegistry resourceRegistry) {
+    public Extractor(IOptions<Defaults> options, IKubernetes k8s, ResourceRegistry resourceRegistry, ILoggerFactory loggerFactory) {
         this.defaults = options.Value;
         this.k8s = k8s;
         this.resourceRegistry = resourceRegistry;
+        this.loggerFactory = loggerFactory;
     }
 
     public bool TryExtractMonitoredService(V1Service it, [MaybeNullWhen(false)] out MonitoredService monitoredService) {
@@ -87,7 +90,7 @@ internal class Extractor
                 Enabled = hpaEnabled,
                 Percentage = hpaPercentage
             },
-            PodMonitor = hpaEnabled ? new(k8s, resourceRegistry, srvName, it.ExtractLabelString()) : null
+            PodMonitor = hpaEnabled ? new(k8s, resourceRegistry, srvName, it.ExtractLabelString(), loggerFactory.CreateLogger<PodMonitor>()) : null
         };
         return true;
     }

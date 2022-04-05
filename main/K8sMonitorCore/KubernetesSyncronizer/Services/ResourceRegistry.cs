@@ -2,6 +2,7 @@
 using k8s.Models;
 using KubernetesSyncronizer.Data;
 using KubernetesSyncronizer.Util;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pinger;
 using System.Collections.Concurrent;
@@ -15,14 +16,20 @@ public class ResourceRegistry
     private readonly PingerManager pinger;
     private readonly Extractor extractor;
 
-    public ResourceRegistry(PingerManager pinger, IOptions<Defaults> options, IKubernetes k8s) {
+    public ResourceRegistry(PingerManager pinger, IOptions<Defaults> options, IKubernetes k8s, ILoggerFactory loggerFactory) {
         this.pinger = pinger;
-        this.extractor = new Extractor(options, k8s, this);
+        this.extractor = new Extractor(options, k8s, this, loggerFactory);
     }
 
     private readonly ConcurrentDictionary<string, MonitoredService> map = new();
 
     internal void AddPod(string serviceKey, V1Pod item) {
+        if (item.Status.PodIP is null)
+            return;
+
+        if (item.Status.ContainerStatuses.Any(e => e.State.Terminated is not null))
+            return;
+
         if (map.TryGetValue(serviceKey, out var service))
             if (service.TryGetEndpointForPod(item, out var key, out var ep))
                 pinger.RegisterEndpoint(key, ep);

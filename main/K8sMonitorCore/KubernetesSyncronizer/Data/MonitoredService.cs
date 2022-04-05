@@ -28,7 +28,7 @@ public class MonitoredService : IDisposable
     public string GetPodFullName(V1Pod pod) => Name + "::" + pod.Name();
 
     public bool TryGetEndpointForPod(V1Pod pod, [MaybeNullWhen(false)] out string name, [MaybeNullWhen(false)] out Endpoint endpoint) {
-        if (Errors.HasErrors || Uri is null) {
+        if (Errors.HasErrors || Uri is null || pod is { Status.PodIP: null}) {
             name = null;
             endpoint = null;
             return false;
