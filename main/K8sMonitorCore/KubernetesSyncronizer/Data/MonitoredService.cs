@@ -41,8 +41,8 @@ public class MonitoredService : IDisposable
         return true;
     }
 
-    public bool TeyGetEndpoint([MaybeNullWhen(false)] out string name, [MaybeNullWhen(false)] out Endpoint endpoint) {
-        if (Errors.HasErrors || Uri is null || Hpa is { Enabled: false}) {
+    public bool TryGetEndpoint([MaybeNullWhen(false)] out string name, [MaybeNullWhen(false)] out Endpoint endpoint) {
+        if (Errors.HasErrors || Uri is null || Hpa is { Enabled: true}) {
             name = null;
             endpoint = null;
             return false;

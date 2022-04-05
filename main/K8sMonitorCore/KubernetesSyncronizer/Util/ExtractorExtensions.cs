@@ -9,9 +9,9 @@ namespace KubernetesSyncronizer.Util;
 
 public static class ExtractorExtensions
 {
-    public static string? ExtractLabelString(this V1Service it) {
+    public static string ExtractLabelString(this V1Service it) {
         if (it.Spec?.Selector is null)
-            return null;
+            return "";
 
         var labels = new List<string>();
         foreach (var key in it.Spec.Selector)
@@ -31,7 +31,7 @@ public static class ExtractorExtensions
 
     internal static Uri ExtendUriWithPodIp(this Uri serviceUri, string podIp) {
         podIp = podIp.Replace('.', '-');
-        return new Uri($"{serviceUri.Scheme}://{podIp}.{serviceUri.Host}:{serviceUri.Port}/{serviceUri.AbsolutePath}");
+        return new Uri($"{serviceUri.Scheme}://{podIp}.{serviceUri.Host}:{serviceUri.Port}{serviceUri.AbsolutePath}");
     }
 
 }

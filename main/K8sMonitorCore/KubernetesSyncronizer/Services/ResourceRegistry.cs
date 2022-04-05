@@ -23,8 +23,8 @@ public class ResourceRegistry
     private readonly ConcurrentDictionary<string, MonitoredService> map = new();
 
     internal void AddPod(string serviceKey, V1Pod item) {
-        if (map.TryGetValue(serviceKey, out var service)) 
-            if (service.TryGetEndpointForPod(item, out var key, out var ep)) 
+        if (map.TryGetValue(serviceKey, out var service))
+            if (service.TryGetEndpointForPod(item, out var key, out var ep))
                 pinger.RegisterEndpoint(key, ep);
     }
 
@@ -37,14 +37,19 @@ public class ResourceRegistry
 
 
     public void AddService(V1Service service) {
-        var resource = extractor.TryExtractMonitoredService(service);
-        if (resource is null)
+        if (extractor.TryExtractMonitoredService(service, out var resource) is false)
             return;
 
         map.TryAdd(resource.Name, resource);
 
-        if (resource.TeyGetEndpoint(out var key, out var ep)) {
-            pinger.RegisterEndpoint(key, ep);
+        if (resource is { Errors.HasErrors: true })
+            return;
+
+        if (resource is { Hpa.Enabled: false }) {
+            if (resource.TryGetEndpoint(out var key, out var ep))
+                pinger.RegisterEndpoint(key, ep);
+        } else {
+            resource.PodMonitor?.StartWatching();
         }
     }
 

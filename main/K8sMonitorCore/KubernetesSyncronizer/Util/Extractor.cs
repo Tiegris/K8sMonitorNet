@@ -5,6 +5,7 @@ using KubernetesSyncronizer.Services;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,12 +34,15 @@ internal class Extractor
         this.resourceRegistry = resourceRegistry;
     }
 
-    public MonitoredService? TryExtractMonitoredService(V1Service it) {
+    public bool TryExtractMonitoredService(V1Service it, [MaybeNullWhen(false)] out MonitoredService monitoredService) {
         var dict = it.Metadata.Annotations;
         var errors = new ServiceConfigurationError();
 
-        if (dict is null || !dict.TryGetValue(PATH, out string? path))
-            return null;
+        if (dict is null || !dict.TryGetValue(PATH, out string? path)) {
+            monitoredService = null;
+            return false;
+        }
+        path = path.TrimStart('/');
 
         errors.AddIfNotNull(TryExtract(it, PORT, defaults.Port, out int port));
         if (port is <= 0 or > 65535)
@@ -51,6 +55,7 @@ internal class Extractor
 
         dict.TryGetValue(SCHEME, out string? scheme);
         scheme ??= defaults.Scheme;
+        scheme = scheme.Replace("://", "");
         if (scheme is not ("http" or "https"))
             errors.Add(new ConfigurationErrorEntry(
                 SCHEME,
@@ -77,7 +82,7 @@ internal class Extractor
 
         var srvName = it.ExtractFullName();
 
-        return new(srvName, errors) {
+        monitoredService =  new(srvName, errors) {
             Timeout = new TimeSpan(0, 0, timeout),
             Period = new TimeSpan(0, 0, period),
             FailureThreshold = failureThreshold,
@@ -86,9 +91,9 @@ internal class Extractor
                 Enabled = hpaEnabled,
                 Percentage = hpaPercentage
             },
-            PodMonitor = hpaEnabled ? new(k8s, resourceRegistry, srvName) : null
+            PodMonitor = hpaEnabled ? new(k8s, resourceRegistry, srvName, it.ExtractLabelString()) : null
         };
-
+        return true;
     }
 
 }

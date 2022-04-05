@@ -8,17 +8,19 @@ using static k8s.WatchEventType;
 namespace KubernetesSyncronizer.Services;
 internal class PodMonitor : IDisposable {
     private readonly string serviceKey;
+    private readonly string selector;
     private readonly IKubernetes client;
     private readonly ResourceRegistry resourceRegistry;
     private Watcher<V1Pod>? watch;
 
-    internal PodMonitor(IKubernetes k8s, ResourceRegistry resourceRegistry, string serviceKey) {
+    internal PodMonitor(IKubernetes k8s, ResourceRegistry resourceRegistry, string serviceKey, string selector) {
         client = k8s;
         this.resourceRegistry = resourceRegistry;
         this.serviceKey = serviceKey;
+        this.selector = selector;
     }
 
-    internal void StartWatching(string selector) {
+    internal void StartWatching() {
         var podlistResp = client.ListPodForAllNamespacesWithHttpMessagesAsync(watch: true, labelSelector: selector);
         watch = podlistResp.Watch<V1Pod, V1PodList>(WatchEventHandler);
     }

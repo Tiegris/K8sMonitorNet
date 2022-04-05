@@ -44,9 +44,6 @@ internal static class ExtractorHelper {
     #endregion
 
     internal static Uri BuildFqdnUri(string scheme, string ns, string srv, int port, string path) {
-        path = path.TrimStart('/');
-        scheme = scheme.Replace("://", "");
-
         return new Uri($"{scheme}://{srv}.{ns}.svc.cluster.local:{port}/{path}");
     }
 
