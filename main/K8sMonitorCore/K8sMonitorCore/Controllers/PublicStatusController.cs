@@ -1,4 +1,5 @@
-﻿using K8sMonitorCore.Aggregation.Service;
+﻿using K8sMonitorCore.Aggregation.Dto;
+using K8sMonitorCore.Aggregation.Service;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -15,14 +16,26 @@ public class PublicStatusController : ControllerBase
         this.aggregator = aggregator;
     }
 
-    [HttpGet()]
-    public ActionResult IsOk([FromQuery] string srv, [FromQuery] string ns) {
+    [HttpGet]
+    public ActionResult IsOk([FromQuery] string ns, [FromQuery] string? srv) {
         try {
-            return StatusCode(200, "Ok");
-        } catch (KeyNotFoundException e) {
-            return StatusCode(404, "NotFound");
-        } catch (Exception e) {
-            return StatusCode(500, "");
+            if (aggregator.GetHealthOf(ns, srv))
+                return StatusCode(200, "All healthy within selection");
+            else
+                return StatusCode(533, "Dead services within selection");
+        } catch (KeyNotFoundException) {
+            return StatusCode(404, "Not Found");
+        } catch (Exception) {
+            return StatusCode(500, "Unhandled Error");
+        }
+    }
+
+    [HttpGet("List")]
+    public ActionResult<IEnumerable<ShortStatusDto>> ListAll([FromQuery] string groupBy) {
+        try {
+            return Ok(aggregator.GetHealthGroupBy(groupBy));
+        } catch (Exception) {
+            return StatusCode(500, "Unhandled Error");
         }
     }
 

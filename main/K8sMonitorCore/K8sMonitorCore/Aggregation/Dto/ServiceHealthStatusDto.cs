@@ -2,7 +2,7 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace K8sMonitorCore.Domain;
+namespace K8sMonitorCore.Aggregation.Dto;
 
 public class ServiceHealthStatusDto
 {
@@ -22,10 +22,9 @@ public class ServiceHealthStatusDto
 public static class ServiceHealthStatusDtoExtensions
 {
     public static ServiceHealthStatusDto? ToDto(this EndpointStatusInfo? info) {
-        if (info is not null)
-            return new ServiceHealthStatusDto(info);
-        else
+        if (info is null)
             return null;
+        return new ServiceHealthStatusDto(info);
     }
 }
 

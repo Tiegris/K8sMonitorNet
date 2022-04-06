@@ -21,7 +21,7 @@ public static class ExtractorExtensions
     }
 
     public static string ExtractFullName(this V1Service it) {
-        return $"{it.Namespace()}::{it.Name()}";
+        return $"{it.Name()}::{it.Namespace()}";
     }
 
     public static string ExtractPodIp(this V1Pod it) {

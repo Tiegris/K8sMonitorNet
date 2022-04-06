@@ -1,4 +1,4 @@
-﻿using K8sMonitorCore.Domain;
+﻿using K8sMonitorCore.Aggregation.Dto;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,11 +6,6 @@ namespace K8sMonitorCore.Aggregation.Service;
 
 public partial class AggregationService
 {
-    public void AggregateByNamespace() {
-        var statusInfos = pingerManager.Scrape();
-        var resources = resourceRegistry.Values;
-
-    }
 
     public IList<ServiceInfoDto> PlainList() {
         var statusInfos = pingerManager.Scrape();

@@ -1,6 +1,6 @@
 ﻿using KubernetesSyncronizer.Data;
 
-namespace K8sMonitorCore.Domain;
+namespace K8sMonitorCore.Aggregation.Dto;
 
 public class ServiceInfoDto
 {

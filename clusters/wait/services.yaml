@@ -10,7 +10,7 @@ metadata:
     mnet.period: "10"
     mnet.failureThreshold: "3"
     mnet.hpa.enabled: "true"
-    mnet.hpa.percentage: "70"
+    mnet.hpa.percentage: "60"
 spec:
   selector:
     app: wait-1
@@ -25,11 +25,11 @@ metadata:
   annotations:
     mnet.uri.scheme: "http"
     mnet.uri.port: "9001"
-    #mnet.uri.path: "Wait"
+    mnet.uri.path: "Wait"
     mnet.timeout: "1"
     mnet.period: "3"
     mnet.failureThreshold: "5"
-    mnet.hpa.enabled: "no"
+    mnet.hpa.enabled: "false"
     mnet.hpa.percentage: "80"
 spec:
   selector:

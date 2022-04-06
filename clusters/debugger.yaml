@@ -33,6 +33,9 @@ spec:
       - name: debugger
         image: mcr.microsoft.com/dotnet/aspnet:6.0
         command: ["sleep", "7200"]
+        env:
+        - name: "ASPNETCORE_ENVIRONMENT"
+          value: "Development"
         resources:
           limits:
             memory: "128Mi"
