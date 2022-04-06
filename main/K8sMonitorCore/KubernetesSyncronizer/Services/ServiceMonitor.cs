@@ -21,6 +21,7 @@ public class ServiceMonitor : IDisposable
     }
 
     public void StartWatching() {
+        watch?.Dispose();
         var podlistResp = client.ListServiceForAllNamespacesWithHttpMessagesAsync(watch: true);
         watch = podlistResp.Watch<V1Service, V1ServiceList>(WatchEventHandler);
     }
@@ -28,7 +29,7 @@ public class ServiceMonitor : IDisposable
 
     private void WatchEventHandler(WatchEventType type, V1Service item) {
         try {
-            logger.LogInformation("Service: {name} {type}", item.Name(), type);
+            logger.LogTrace("Service: {name} {type}", item.Name(), type);
             switch (type) {
                 case Added:
                     resourceRegistry.AddService(item);
@@ -41,11 +42,12 @@ public class ServiceMonitor : IDisposable
                     resourceRegistry.DeleteService(item);
                     break;
                 case Error:
-                    logger.LogError("Kubernetes watch error: {type} {item}", type, item.Name());
+                    logger.LogError("Kubernetes watch error: {type} {item}", type, item?.Name());
+                    StartWatching();
                     break;
             }
         } catch (Exception ex) {
-            logger.LogCritical("Exception occured in service watch callback: {message}", ex.Message);
+            logger.LogError("Exception occured in service watch callback: {message}", ex.Message);
         }
     }
 

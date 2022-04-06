@@ -30,6 +30,7 @@ internal class EndpointPinger : IDisposable
     }
 
     private async Task StartAsync() {
+        logger.LogInformation("Started pinging {endpoint}", endpoint.Uri);
         var ct = cancelObject.Token;
         while (!ct.IsCancellationRequested) {
             using CancellationTokenSource cancelCycle = new();
@@ -46,7 +47,7 @@ internal class EndpointPinger : IDisposable
     }
 
     private async Task PingCycleAsync(CancellationToken cancelCycle) {
-        logger.LogInformation("Pinging cycle started for {endpoint}", endpoint.Uri);
+        logger.LogTrace("Pinging cycle started for {endpoint}", endpoint.Uri);
 
         using var client = hcf.CreateClient();
         client.Timeout = endpoint.Timeout;
@@ -60,7 +61,7 @@ internal class EndpointPinger : IDisposable
             endpoint.Fail(ex.Message);
         }
 
-        logger.LogInformation("Pinging cycle ended for {endpoint}", endpoint.Uri);
+        logger.LogTrace("Pinging cycle ended for {endpoint}", endpoint.Uri);
     }
 
     #region Dispose

@@ -23,13 +23,14 @@ internal class PodMonitor : IDisposable
     }
 
     internal void StartWatching() {
+        watch?.Dispose();
         var podlistResp = client.ListPodForAllNamespacesWithHttpMessagesAsync(watch: true, labelSelector: selector);
         watch = podlistResp.Watch<V1Pod, V1PodList>(WatchEventHandler);
     }
 
     private void WatchEventHandler(WatchEventType type, V1Pod item) {
         try {
-            logger.LogInformation("Pod: {name} {type}", item.Name(), type);
+            logger.LogTrace("Pod: {name} {type}", item.Name(), type);
             switch (type) {
                 case Added:
                     resourceRegistry.AddPod(serviceKey, item);
@@ -42,10 +43,12 @@ internal class PodMonitor : IDisposable
                     resourceRegistry.DeletePod(serviceKey, item);
                     break;
                 case Error:
+                    StartWatching();
+                    logger.LogError("Kubernetes watch error: {type} {item}", type, item?.Name());
                     break;
             }
         } catch (Exception ex) {
-            logger.LogCritical("Exception occured in pod watch callback: {message}", ex.Message);
+            logger.LogError("Exception occured in pod watch callback: {message}", ex.Message);
         }
     }
 

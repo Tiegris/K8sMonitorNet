@@ -15,9 +15,11 @@ public class ResourceRegistry
 {
     private readonly PingerManager pinger;
     private readonly Extractor extractor;
+    private readonly ILogger<ResourceRegistry> logger;
 
     public ResourceRegistry(PingerManager pinger, IOptions<Defaults> options, IKubernetes k8s, ILoggerFactory loggerFactory) {
         this.pinger = pinger;
+        this.logger = loggerFactory.CreateLogger<ResourceRegistry>();
         this.extractor = new Extractor(options, k8s, this, loggerFactory);
     }
 
@@ -31,14 +33,17 @@ public class ResourceRegistry
             return;
 
         if (map.TryGetValue(serviceKey, out var service))
-            if (service.TryGetEndpointForPod(item, out var key, out var ep))
+            if (service.TryGetEndpointForPod(item, out var key, out var ep)) {
                 pinger.RegisterEndpoint(key, ep);
+                logger.LogInformation("Pod {resource} added.", key);
+            }
     }
 
     internal void DeletePod(string serviceKey, V1Pod item) {
         if (map.TryGetValue(serviceKey, out var service)) {
             var key = service.GetPodFullName(item);
             pinger.UnregisterEndpoint(key);
+            logger.LogInformation("Pod {resource} delted.", key);
         }
     }
 
@@ -47,7 +52,8 @@ public class ResourceRegistry
         if (extractor.TryExtractMonitoredService(service, out var resource) is false)
             return;
 
-        map.TryAdd(resource.Name, resource);
+        if (map.TryAdd(resource.Name, resource))
+            logger.LogInformation("Service {resource} added.", resource.Name);
 
         if (resource is { Errors.HasErrors: true })
             return;
@@ -66,6 +72,7 @@ public class ResourceRegistry
 
         if (map.TryRemove(serviceName, out var monitoredService)) {
             monitoredService.Dispose();
+            logger.LogInformation("Service {resource} deleted.", monitoredService.Name);
             foreach (var name in pinger.EndpointNames.Where(a => a.Contains(monitoredService.Name)))
                 pinger.UnregisterEndpoint(name);
         }
