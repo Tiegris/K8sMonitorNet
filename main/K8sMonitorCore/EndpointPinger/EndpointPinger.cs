@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Pinger;
+namespace EndpointPinger;
 
 internal class EndpointPinger : IDisposable
 {
@@ -18,7 +18,7 @@ internal class EndpointPinger : IDisposable
     internal EndpointPinger(Endpoint endpoint, IHttpClientFactory hcf, ILoggerFactory loggerFactory) {
         this.endpoint = endpoint;
         this.hcf = hcf;
-        this.logger = loggerFactory.CreateLogger<EndpointPinger>();
+        logger = loggerFactory.CreateLogger<EndpointPinger>();
     }
 
     private bool started = false;

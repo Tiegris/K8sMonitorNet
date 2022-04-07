@@ -1,8 +1,8 @@
-﻿using Pinger;
+﻿using EndpointPinger;
 using System;
 using System.Text.Json.Serialization;
 
-namespace K8sMonitorCore.Aggregation.Dto;
+namespace K8sMonitorCore.Aggregation.Dto.Detailed;
 
 public class ServiceHealthStatusDto
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Pinger;
+namespace EndpointPinger;
 
 public class Endpoint
 {

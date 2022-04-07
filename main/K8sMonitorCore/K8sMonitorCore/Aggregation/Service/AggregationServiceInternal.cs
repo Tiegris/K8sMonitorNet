@@ -1,4 +1,5 @@
 ﻿using K8sMonitorCore.Aggregation.Dto;
+using K8sMonitorCore.Aggregation.Dto.Detailed;
 using System.Collections.Generic;
 using System.Linq;
 

@@ -1,4 +1,4 @@
-﻿namespace Pinger;
+﻿namespace EndpointPinger;
 
 public enum StatusType
 {

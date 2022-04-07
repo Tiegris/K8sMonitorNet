@@ -1,10 +1,10 @@
-﻿using k8s;
+﻿using EndpointPinger;
+using k8s;
 using k8s.Models;
 using KubernetesSyncronizer.Data;
 using KubernetesSyncronizer.Util;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Pinger;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +35,7 @@ public class ResourceRegistry
                 resourceVersions.TryUpdate(key, currentVersion, last);
                 return true;
             } else {
+                logger.LogWarning("Out of order event detected.");
                 return false;
             }
         } else {

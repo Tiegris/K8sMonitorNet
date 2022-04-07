@@ -1,6 +1,6 @@
-﻿using k8s.Models;
+﻿using EndpointPinger;
+using k8s.Models;
 using KubernetesSyncronizer.Services;
-using Pinger;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using static KubernetesSyncronizer.Util.ExtractorExtensions;

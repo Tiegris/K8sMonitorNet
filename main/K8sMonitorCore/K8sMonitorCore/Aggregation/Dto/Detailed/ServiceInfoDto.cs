@@ -1,6 +1,6 @@
 ﻿using KubernetesSyncronizer.Data;
 
-namespace K8sMonitorCore.Aggregation.Dto;
+namespace K8sMonitorCore.Aggregation.Dto.Detailed;
 
 public class ServiceInfoDto
 {
@@ -12,11 +12,8 @@ public class ServiceInfoDto
     }
 
     public string Name { get; init; }
-
     public ServiceConfigurationError Errors { get; init; }
-
     public ServiceHealthStatusDto? Status { get; set; }
-
     public ServiceSettingsDto? PingerSettings { get; init; }
 }
 

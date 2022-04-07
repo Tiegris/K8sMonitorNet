@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pinger;
+namespace EndpointPinger;
 
 public class EndpointStatusInfo
 {

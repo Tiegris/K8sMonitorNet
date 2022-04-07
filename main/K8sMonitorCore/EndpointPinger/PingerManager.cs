@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
 
-namespace Pinger;
+namespace EndpointPinger;
 
 public class PingerManager
 {

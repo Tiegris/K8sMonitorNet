@@ -1,4 +1,4 @@
-﻿using K8sMonitorCore.Aggregation.Dto;
+﻿using K8sMonitorCore.Aggregation.Dto.Detailed;
 using K8sMonitorCore.Aggregation.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

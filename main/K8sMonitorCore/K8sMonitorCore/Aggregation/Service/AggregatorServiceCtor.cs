@@ -1,5 +1,5 @@
-﻿using KubernetesSyncronizer.Services;
-using Pinger;
+﻿using EndpointPinger;
+using KubernetesSyncronizer.Services;
 
 namespace K8sMonitorCore.Aggregation.Service;
 

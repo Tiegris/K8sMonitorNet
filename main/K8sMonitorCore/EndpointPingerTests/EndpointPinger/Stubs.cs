@@ -2,7 +2,7 @@
 using System;
 using System.Net.Http;
 
-namespace EndpointPingerTests;
+namespace EndpointPingerTests.EndpointPinger;
 
 class HttpClientFactoryStub : IHttpClientFactory
 {

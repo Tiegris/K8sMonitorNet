@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using EndpointPinger;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
-using Pinger;
 using System;
 using System.Net.Http;
 
-namespace EndpointPingerTests;
+namespace EndpointPingerTests.EndpointPinger;
 
 class EndpointPingerTests_1
 {

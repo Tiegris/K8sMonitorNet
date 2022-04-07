@@ -1,6 +1,6 @@
-﻿using K8sMonitorCore.Aggregation.Dto;
+﻿using EndpointPinger;
+using K8sMonitorCore.Aggregation.Dto.Simple;
 using KubernetesSyncronizer.Data;
-using Pinger;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,27 +54,28 @@ public partial class AggregationService
         }
     }
 
-    public IEnumerable<ShortStatusDto> GetHealthGroupBy(string groupBy) {
+    public IEnumerable<SimpleStatusDto> GetHealthGroupBySrv() {
         var statusInfos = pingerManager.Scrape();
         var resources = resourceRegistry.Values;
 
-        return groupBy switch {
-            "ns" or "namespace" =>
-                    from i in statusInfos
-                    group i by i.Name.GetNs() into nss
-                    select new ShortStatusDto(
-                        GetHealthOfNs(nss, resources),
-                        nss.Key
-                    ),
-            "srv" or "service" =>
-                    from i in statusInfos
-                    group i by i.Name.GetSrvNs() into nss
-                    select new ShortStatusDto(
-                        GetHealthOfSrv(nss.Key, nss, resources),
-                        nss.Key
-                    ),
-            _ => throw new ArgumentOutOfRangeException($"{groupBy} is not a valid groupBy type"),
-        };
+        return from i in statusInfos
+               group i by i.Name.GetSrvNs() into nss
+               select new SimpleStatusDto(
+                   GetHealthOfSrv(nss.Key, nss, resources),
+                   nss.Key
+               );
+    }
+
+    public IEnumerable<SimpleStatusDto> GetHealthGroupByNs() {
+        var statusInfos = pingerManager.Scrape();
+        var resources = resourceRegistry.Values;
+
+        return from i in statusInfos
+               group i by i.Name.GetNs() into nss
+               select new SimpleStatusDto(
+                   GetHealthOfNs(nss, resources),
+                   nss.Key
+               );
     }
 
 }
