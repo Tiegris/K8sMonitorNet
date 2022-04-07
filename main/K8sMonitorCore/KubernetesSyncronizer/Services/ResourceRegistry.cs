@@ -58,11 +58,11 @@ public class ResourceRegistry
         if (resource is { Errors.HasErrors: true })
             return;
 
-        if (resource is { Hpa.Enabled: false }) {
+        if (resource is { Hpa.Enabled: true }) {
+            resource.PodMonitor?.StartWatching();
+        } else {
             if (resource.TryGetEndpoint(out var key, out var ep))
                 pinger.RegisterEndpoint(key, ep);
-        } else {
-            resource.PodMonitor?.StartWatching();
         }
     }
 
