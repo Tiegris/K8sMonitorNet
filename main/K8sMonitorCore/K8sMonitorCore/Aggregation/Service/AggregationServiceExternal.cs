@@ -26,7 +26,7 @@ public partial class AggregationService
         }
     }
 
-    private static bool GetHealthOfNs(string ns,
+    private static bool GetHealthOfNs(
     IEnumerable<EndpointStatusInfo> endpoints,
     ICollection<MonitoredService> resources) {
 
@@ -48,7 +48,7 @@ public partial class AggregationService
             throw new KeyNotFoundException();
 
         if (srv is null) {
-            return GetHealthOfNs(ns, endpoints, resources);
+            return GetHealthOfNs(endpoints, resources);
         } else {
             return GetHealthOfSrv($"{srv}::{ns}", endpoints, resources);
         }
@@ -63,7 +63,7 @@ public partial class AggregationService
                     from i in statusInfos
                     group i by i.Name.GetNs() into nss
                     select new ShortStatusDto(
-                        GetHealthOfNs(nss.Key, nss, resources),
+                        GetHealthOfNs(nss, resources),
                         nss.Key
                     ),
             "srv" or "service" =>

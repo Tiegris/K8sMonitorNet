@@ -29,11 +29,12 @@ public class ServiceMonitor : IDisposable
 
     private void WatchEventHandler(WatchEventType type, V1Service item) {
         try {
+            if (!resourceRegistry.ValidateEventOrder(item))
+                return;
+
             logger.LogTrace("Service: {name} {type}", item.Name(), type);
             switch (type) {
                 case Added:
-                    resourceRegistry.AddService(item);
-                    break;
                 case Modified:
                     resourceRegistry.DeleteService(item);
                     resourceRegistry.AddService(item);

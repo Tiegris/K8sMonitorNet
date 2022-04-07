@@ -30,11 +30,12 @@ internal class PodMonitor : IDisposable
 
     private void WatchEventHandler(WatchEventType type, V1Pod item) {
         try {
+            if (!resourceRegistry.ValidateEventOrder(item))
+                return;
+
             logger.LogTrace("Pod: {name} {type}", item.Name(), type);
             switch (type) {
                 case Added:
-                    resourceRegistry.AddPod(serviceKey, item);
-                    break;
                 case Modified:
                     resourceRegistry.DeletePod(serviceKey, item);
                     resourceRegistry.AddPod(serviceKey, item);

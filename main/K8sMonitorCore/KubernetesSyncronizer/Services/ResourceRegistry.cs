@@ -24,6 +24,24 @@ public class ResourceRegistry
     }
 
     private readonly ConcurrentDictionary<string, MonitoredService> map = new();
+    private readonly ConcurrentDictionary<string, long> resourceVersions = new();
+
+    internal bool ValidateEventOrder<T>(T item) where T : IMetadata<V1ObjectMeta> {
+        string key = $"{item.Namespace()}::{item.Name()}";
+        long currentVersion = long.Parse(item.ResourceVersion());
+
+        if (resourceVersions.TryGetValue(key, out long last)) {
+            if (last < currentVersion) {
+                resourceVersions.TryUpdate(key, currentVersion, last);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            resourceVersions.TryAdd(key, currentVersion);
+            return true;
+        }
+    }
 
     internal void AddPod(string serviceKey, V1Pod item) {
         if (item.Status.PodIP is null)
@@ -47,8 +65,7 @@ public class ResourceRegistry
         }
     }
 
-
-    public void AddService(V1Service service) {
+    internal void AddService(V1Service service) {
         if (extractor.TryExtractMonitoredService(service, out var resource) is false)
             return;
 
@@ -66,8 +83,7 @@ public class ResourceRegistry
         }
     }
 
-
-    public void DeleteService(V1Service service) {
+    internal void DeleteService(V1Service service) {
         var serviceName = service.ExtractFullName();
 
         if (map.TryRemove(serviceName, out var monitoredService)) {
