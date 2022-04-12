@@ -5,6 +5,55 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    <form method="post" id="editForm"
+              data-ajax="true"
+              data-ajax-update="#grid"
+              data-ajax-complete="completed"
+              data-ajax-failure="failed"
+              data-ajax-begin="begin"
+              data-ajax-loading="#spinner">   
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label>GroupBy</label>
+                    <select class="form-control" id="groupBySelector"
+                            asp-for="GroupById"
+                            asp-items="Model.GroupByOptions">
+                    </select>
+                </div>
+            </div>
+
+@*            <div class="d-flex justify-content-between">
+                <div>
+                    <button class="btn btn-primary" id="load">
+                        Manual refresh
+                    </button>
+                    <span id="spinner" style="display:none;"><i class="fas fa-spinner fa-spin"></i></span>
+                </div>
+            </div>*@
+
+
+    </form>
+
+    <div class="mt-2" id="grid">
+        <partial name="_SimpleList" for="@Model.StatusList" />
+    </div>
 </div>
+
+
+@section scripts {
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        completed = function (xhr, data) {
+            //document.getElementById("load").disabled = false;
+        };
+        failed = function (xhr, data) {
+            //document.getElementById("load").disabled = false;
+        };
+        begin = function (xhr, data) {
+            //document.getElementById("load").disabled = true;
+        };
+        intervalId = setInterval(_ => {$("#editForm").submit();}, 5000);
+    </script>    
+}

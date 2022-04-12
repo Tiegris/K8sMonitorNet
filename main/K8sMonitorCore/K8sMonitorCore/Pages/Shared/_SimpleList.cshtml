@@ -1,0 +1,18 @@
+﻿@model IEnumerable<K8sMonitorCore.Aggregation.Dto.Simple.SimpleStatusDto>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-2 col-lg-2 d-flex mb-1">
+            @if (item.Healthy) {
+                <div style="border-radius: 20px; border: 1px solid rgba(0,0,0,.125); background-color: #6bffa6">
+                    <p class="card-header" style="border-radius: 20px">@item.Name</p>
+                </div> 
+            } else {
+                <div style="border-radius: 20px; border: 1px solid rgba(0,0,0,.125); background-color: #f78a77">
+                    <p class="card-header" style="border-radius: 20px">@item.Name</p>
+                </div>
+            }
+        </div>
+    }
+</div>
