@@ -42,7 +42,7 @@ public partial class AggregationService
 
         var endpoints = srv is null ?
             statusInfos.Where(a => a.Name.GetNs() == ns) :
-            statusInfos.Where(a => a.Name.GetSrvNs() == $"{srv}::{ns}");
+            statusInfos.Where(a => a.Name.GetSrvNs() == MakeKey(ns, srv));
 
         if (!endpoints.Any())
             throw new KeyNotFoundException();
@@ -50,7 +50,7 @@ public partial class AggregationService
         if (srv is null) {
             return GetHealthOfNs(endpoints, resources);
         } else {
-            return GetHealthOfSrv($"{srv}::{ns}", endpoints, resources);
+            return GetHealthOfSrv(MakeKey(ns, srv), endpoints, resources);
         }
     }
 
@@ -60,6 +60,7 @@ public partial class AggregationService
 
         return from i in statusInfos
                group i by i.Name.GetSrvNs() into nss
+               orderby nss.Key
                select new SimpleStatusDto(
                    GetHealthOfSrv(nss.Key, nss, resources),
                    nss.Key
@@ -72,6 +73,7 @@ public partial class AggregationService
 
         return from i in statusInfos
                group i by i.Name.GetNs() into nss
+               orderby nss.Key
                select new SimpleStatusDto(
                    GetHealthOfNs(nss, resources),
                    nss.Key

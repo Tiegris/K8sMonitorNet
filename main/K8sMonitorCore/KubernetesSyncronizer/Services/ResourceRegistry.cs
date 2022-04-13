@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using static KubernetesSyncronizer.Util.KeyStringExtensions;
 
 namespace KubernetesSyncronizer.Services;
 
@@ -27,7 +28,7 @@ public class ResourceRegistry
     private readonly ConcurrentDictionary<string, long> resourceVersions = new();
 
     internal bool ValidateEventOrder<T>(T item) where T : IMetadata<V1ObjectMeta> {
-        string key = $"{item.Namespace()}::{item.Name()}";
+        string key = MakeKey(item.Namespace(), item.Name());
         long currentVersion = long.Parse(item.ResourceVersion());
 
         if (resourceVersions.TryGetValue(key, out long last)) {

@@ -4,10 +4,12 @@ using System.Text.RegularExpressions;
 namespace KubernetesSyncronizer.Util;
 static public class KeyStringExtensions
 {
+    public static string MakeKey(string ns, string srv) => $"{ns}::{srv}";
+    public static string MakeKey(string ns, string srv, string pod) => $"{ns}::{srv}::{pod}";
 
     public static string GetNs(this string value) {
         var ss = value.Split("::");
-        return ss.Last();
+        return ss.First();
     }
 
     public static string GetSrvNs(this string value) {
