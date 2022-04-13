@@ -1,5 +1,6 @@
 ﻿using k8s;
 using k8s.Models;
+using KubernetesSyncronizer.Data;
 using Microsoft.Extensions.Logging;
 using System;
 using static k8s.WatchEventType;
@@ -7,14 +8,14 @@ using static k8s.WatchEventType;
 namespace KubernetesSyncronizer.Services;
 internal class PodMonitor : IDisposable
 {
-    private readonly string serviceKey;
+    private readonly K8sKey serviceKey;
     private readonly string selector;
     private readonly ILogger<PodMonitor> logger;
     private readonly IKubernetes client;
     private readonly ResourceRegistry resourceRegistry;
     private Watcher<V1Pod>? watch;
 
-    internal PodMonitor(IKubernetes k8s, ResourceRegistry resourceRegistry, string serviceKey, string selector, ILogger<PodMonitor> logger) {
+    internal PodMonitor(IKubernetes k8s, ResourceRegistry resourceRegistry, K8sKey serviceKey, string selector, ILogger<PodMonitor> logger) {
         client = k8s;
         this.resourceRegistry = resourceRegistry;
         this.serviceKey = serviceKey;

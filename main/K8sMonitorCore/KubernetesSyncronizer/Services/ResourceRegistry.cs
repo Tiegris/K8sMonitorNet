@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using static KubernetesSyncronizer.Util.KeyStringExtensions;
+using static KubernetesSyncronizer.Util.K8sKeyExtensions;
 
 namespace KubernetesSyncronizer.Services;
 
@@ -24,11 +24,11 @@ public class ResourceRegistry
         this.extractor = new Extractor(options, k8s, this, loggerFactory);
     }
 
-    private readonly ConcurrentDictionary<string, MonitoredService> map = new();
-    private readonly ConcurrentDictionary<string, long> resourceVersions = new();
+    private readonly ConcurrentDictionary<K8sKey, MonitoredService> map = new();
+    private readonly ConcurrentDictionary<K8sKey, long> resourceVersions = new();
 
     internal bool ValidateEventOrder<T>(T item) where T : IMetadata<V1ObjectMeta> {
-        string key = MakeKey(item.Namespace(), item.Name());
+        K8sKey key = new(item.Namespace(), item.Name());
         long currentVersion = long.Parse(item.ResourceVersion());
 
         if (resourceVersions.TryGetValue(key, out long last)) {
@@ -45,7 +45,7 @@ public class ResourceRegistry
         }
     }
 
-    internal void AddPod(string serviceKey, V1Pod item) {
+    internal void AddPod(K8sKey serviceKey, V1Pod item) {
         if (item.Status.PodIP is null)
             return;
 
@@ -59,7 +59,7 @@ public class ResourceRegistry
             }
     }
 
-    internal void DeletePod(string serviceKey, V1Pod item) {
+    internal void DeletePod(K8sKey serviceKey, V1Pod item) {
         if (map.TryGetValue(serviceKey, out var service)) {
             var key = service.GetPodFullName(item);
             pinger.UnregisterEndpoint(key);
@@ -71,8 +71,8 @@ public class ResourceRegistry
         if (extractor.TryExtractMonitoredService(service, out var resource) is false)
             return;
 
-        if (map.TryAdd(resource.Name, resource))
-            logger.LogInformation("Service {resource} added.", resource.Name);
+        if (map.TryAdd(resource.Key, resource))
+            logger.LogInformation("Service {resource} added.", resource.Key);
 
         if (resource is { Errors.HasErrors: true })
             return;
@@ -86,12 +86,12 @@ public class ResourceRegistry
     }
 
     internal void DeleteService(V1Service service) {
-        var serviceName = service.ExtractFullName();
+        var serviceName = service.ExtractKey();
 
         if (map.TryRemove(serviceName, out var monitoredService)) {
             monitoredService.Dispose();
-            logger.LogInformation("Service {resource} deleted.", monitoredService.Name);
-            foreach (var name in pinger.EndpointNames.Where(a => a.Contains(monitoredService.Name)))
+            logger.LogInformation("Service {resource} deleted.", monitoredService.Key);
+            foreach (var name in pinger.EndpointNames.Where(a => monitoredService.Key.SrvEquals(a)))
                 pinger.UnregisterEndpoint(name);
         }
     }

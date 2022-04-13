@@ -1,5 +1,6 @@
 ﻿using K8sMonitorCore.Aggregation.Dto;
 using K8sMonitorCore.Aggregation.Dto.Detailed;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,9 +14,9 @@ public partial class AggregationService
         var resources = resourceRegistry.Values;
 
         return resources.Select(service => new ServiceInfoDto(
-            service.Name,
+            service.Key.ToString(),
             service.Errors,
-            statusInfos.Where(endpoint => endpoint.Name.Contains(service.Name)).FirstOrDefault().ToDto(),
+            statusInfos.Where(endpoint => service.Key.SrvEquals(endpoint.Key)).FirstOrDefault().ToDto(),
             service.Errors.HasErrors ?
             null :
             new ServiceSettingsDto(

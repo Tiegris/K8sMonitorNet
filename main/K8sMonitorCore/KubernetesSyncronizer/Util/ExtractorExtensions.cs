@@ -1,7 +1,8 @@
 ﻿using k8s.Models;
+using KubernetesSyncronizer.Data;
 using System;
 using System.Collections.Generic;
-using static KubernetesSyncronizer.Util.KeyStringExtensions;
+using static KubernetesSyncronizer.Util.K8sKeyExtensions;
 
 
 namespace KubernetesSyncronizer.Util;
@@ -20,8 +21,8 @@ public static class ExtractorExtensions
         return labelStr;
     }
 
-    public static string ExtractFullName(this V1Service it) {
-        return MakeKey(it.Namespace(), it.Name());
+    public static K8sKey ExtractKey(this V1Service it) {
+        return new K8sKey(it.Namespace(), it.Name());
     }
 
     public static string ExtractPodIp(this V1Pod it) {

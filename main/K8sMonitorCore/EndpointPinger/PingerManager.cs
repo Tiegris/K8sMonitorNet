@@ -7,7 +7,7 @@ namespace EndpointPinger;
 
 public class PingerManager
 {
-    private readonly ConcurrentDictionary<string, EndpointPinger> map = new();
+    private readonly ConcurrentDictionary<IKey, EndpointPinger> map = new();
 
     private readonly IHttpClientFactory hcf;
     private readonly ILoggerFactory lf;
@@ -16,16 +16,15 @@ public class PingerManager
         this.hcf = hcf;
         this.lf = lf;
     }
-    public ICollection<string> EndpointNames => map.Keys;
+    public ICollection<IKey> EndpointNames => map.Keys;
 
-    public string RegisterEndpoint(string name, Endpoint endpoint) {
+    public void RegisterEndpoint(IKey key, Endpoint endpoint) {
         var epp = new EndpointPinger(endpoint, hcf, lf);
         epp.StartAndForget();
-        map.TryAdd(name, epp);
-        return name;
+        map.TryAdd(key, epp);
     }
 
-    public void UnregisterEndpoint(string name) {
+    public void UnregisterEndpoint(IKey name) {
         map.TryRemove(name, out EndpointPinger? epp);
         epp?.Dispose();
     }
@@ -34,7 +33,7 @@ public class PingerManager
         List<EndpointStatusInfo> ret = new();
         foreach (var item in map) {
             ret.Add(new EndpointStatusInfo(
-                name: item.Key,
+                key: item.Key,
                 endpoint: item.Value.Endpoint
             ));
         }

@@ -4,15 +4,15 @@ namespace EndpointPinger;
 
 public class EndpointStatusInfo
 {
-    public EndpointStatusInfo(string name, Endpoint endpoint) {
-        Name = name;
+    public EndpointStatusInfo(IKey key, Endpoint endpoint) {
+        Key = key;
         Uri = endpoint.Uri;
         StatusCode = endpoint.Status;
         LastChecked = endpoint.LastChecked;
         LastError = endpoint.LastError;
     }
 
-    public string Name { get; internal init; }
+    public IKey Key { get; internal init; }
     public Uri Uri { get; internal init; }
     public StatusType StatusCode { get; internal init; }
     public DateTime LastChecked { get; internal init; }

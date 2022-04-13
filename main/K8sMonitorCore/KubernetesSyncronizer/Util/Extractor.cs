@@ -79,7 +79,7 @@ internal class Extractor
                 "Hpa percentage must be between 1 and 100."
             ));
 
-        var srvName = it.ExtractFullName();
+        var srvName = it.ExtractKey();
 
         monitoredService = new(srvName, errors) {
             Timeout = new TimeSpan(0, 0, timeout),

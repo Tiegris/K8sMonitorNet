@@ -12,12 +12,12 @@ public class MonitoredService : IDisposable
 {
     internal PodMonitor? PodMonitor { get; init; }
 
-    public MonitoredService(string name, ServiceConfigurationError errors) {
-        Name = name;
+    public MonitoredService(K8sKey key, ServiceConfigurationError errors) {
+        Key = key;
         Errors = errors;
     }
 
-    public string Name { get; init; }
+    public K8sKey Key { get; init; }
     public int FailureThreshold { get; init; }
     public TimeSpan Timeout { get; init; }
     public TimeSpan Period { get; init; }
@@ -25,29 +25,29 @@ public class MonitoredService : IDisposable
     public Hpa? Hpa { get; init; }
     public ServiceConfigurationError Errors { get; init; }
 
-    public string GetPodFullName(V1Pod pod) => pod.Name() + "::" + Name;
+    public K8sKey GetPodFullName(V1Pod pod) => new(Key.Ns, Key.Srv) { Pod = pod.Name() };
 
-    public bool TryGetEndpointForPod(V1Pod pod, [MaybeNullWhen(false)] out string name, [MaybeNullWhen(false)] out Endpoint endpoint) {
+    public bool TryGetEndpointForPod(V1Pod pod, [MaybeNullWhen(false)] out K8sKey key, [MaybeNullWhen(false)] out Endpoint endpoint) {
         if (Errors.HasErrors || Uri is null || pod is { Status.PodIP: null }) {
-            name = null;
+            key = null;
             endpoint = null;
             return false;
         }
 
         Uri podUri = Uri.ExtendUriWithPodIp(pod.ExtractPodIp());
-        name = GetPodFullName(pod);
+        key = GetPodFullName(pod);
         endpoint = new Endpoint(FailureThreshold, Timeout, Period, podUri);
         return true;
     }
 
-    public bool TryGetEndpoint([MaybeNullWhen(false)] out string name, [MaybeNullWhen(false)] out Endpoint endpoint) {
+    public bool TryGetEndpoint([MaybeNullWhen(false)] out K8sKey key, [MaybeNullWhen(false)] out Endpoint endpoint) {
         if (Errors.HasErrors || Uri is null || Hpa is { Enabled: true }) {
-            name = null;
+            key = null;
             endpoint = null;
             return false;
         }
 
-        name = Name;
+        key = Key;
         endpoint = new Endpoint(FailureThreshold, Timeout, Period, Uri);
         return true;
     }
