@@ -1,7 +1,7 @@
 using EndpointPinger;
 using NUnit.Framework;
 
-namespace EndpointPingerTests.Endpoint;
+namespace EndpointPingerTests;
 
 public class EndpointTests_1
 {
