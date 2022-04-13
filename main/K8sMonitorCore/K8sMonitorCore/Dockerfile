@@ -7,6 +7,8 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["K8sMonitorCore/K8sMonitorCore.csproj", "K8sMonitorCore/"]
+COPY ["KubernetesSyncronizer/KubernetesSyncronizer.csproj", "KubernetesSyncronizer/"]
+COPY ["EndpointPinger/EndpointPinger.csproj", "EndpointPinger/"]
 RUN dotnet restore "K8sMonitorCore/K8sMonitorCore.csproj"
 COPY . .
 WORKDIR "/src/K8sMonitorCore"
