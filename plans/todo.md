@@ -16,7 +16,7 @@
 - [x] A pingelendő végpontokat a rendszer a Kubernetes API-ja segítségével automatikusan felderíti induláskor, a konfigurációt annotációkból veszi
 - [ ] Egyszerű webes felületen vizuálisan megtekinthető minden belső szolgáltatás állapota
 - [x] Az alkalmazás GitHub-on publikusan elérhető
-- [-] GitHub Actions CI pipeline előállítja a Docker konténert, publikálja azt (Docker Hub vagy GitHub Container Registry)
+- [x] GitHub Actions CI pipeline előállítja a Docker konténert, publikálja azt (Docker Hub vagy GitHub Container Registry)
 
 ## A jeleshez ill. iMsc pontok megszerzéséhez szükséges
 
@@ -25,3 +25,7 @@
 - [x] Horizontálisan skálázott alkalmazás esetén "minimum N darab, vagy M% fusson" jellegű szabály támogatása
 - [x] A pingelendő végpontokat a rendszer a Kubernetes API-ja segítségével folyamatosan figyeli, és új szolgáltatás/pod megjelenésekor és változásakor azt is bevonja a pingelendő körébe
 - [-] Az alkalmazáshoz készül Helm chart
+    - ingressek mit engedek ki
+    - image
+    - annotációk
+    - resources
