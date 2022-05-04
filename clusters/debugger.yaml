@@ -31,14 +31,14 @@ spec:
     spec:
       containers:
       - name: debugger
-        image: mcr.microsoft.com/dotnet/aspnet:6.0
+        image: mcr.microsoft.com/dotnet/sdk:6.0
         command: ["sleep", "7200"]
         env:
         - name: "ASPNETCORE_ENVIRONMENT"
           value: "Development"
         resources:
           limits:
-            memory: "128Mi"
+            memory: "400Mi"
             cpu: "500m"
         ports:
         - containerPort: 5000
