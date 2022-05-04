@@ -16,7 +16,7 @@ public partial class AggregationService
         return resources.Select(service => new ServiceInfoDto(
             service.Key.ToString(),
             service.Errors,
-            statusInfos.Where(endpoint => service.Key.SrvEquals(endpoint.Key)).FirstOrDefault().ToDto(),
+            statusInfos.Where(endpoint => service.Key.SrvEquals(endpoint.Key)).FirstOrDefault()?.ToDto(),
             service.Errors.HasErrors ?
             null :
             new ServiceSettingsDto(

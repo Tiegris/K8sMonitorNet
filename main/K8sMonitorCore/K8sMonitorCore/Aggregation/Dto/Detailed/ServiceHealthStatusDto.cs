@@ -21,9 +21,7 @@ public class ServiceHealthStatusDto
 
 public static class ServiceHealthStatusDtoExtensions
 {
-    public static ServiceHealthStatusDto? ToDto(this EndpointStatusInfo? info) {
-        if (info is null)
-            return null;
+    public static ServiceHealthStatusDto ToDto(this EndpointStatusInfo info) {
         return new ServiceHealthStatusDto(info);
     }
 }
