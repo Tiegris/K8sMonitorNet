@@ -12,10 +12,10 @@ COPY ["EndpointPinger/EndpointPinger.csproj", "EndpointPinger/"]
 RUN dotnet restore "K8sMonitorCore/K8sMonitorCore.csproj"
 COPY . .
 WORKDIR "/src/K8sMonitorCore"
-RUN dotnet build "K8sMonitorCore.csproj" -c Release -o /app/build
+RUN dotnet build "K8sMonitorCore.csproj" -c Debug -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "K8sMonitorCore.csproj" -c Release -o /app/publish
+RUN dotnet publish "K8sMonitorCore.csproj" -c Debug -o /app/publish
 
 FROM base AS final
 WORKDIR /app
