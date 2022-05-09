@@ -6,9 +6,7 @@ using KubernetesSyncronizer.Util;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using static KubernetesSyncronizer.Util.K8sKeyExtensions;
 
 namespace KubernetesSyncronizer.Services;
 
@@ -95,6 +93,6 @@ public class ResourceRegistry
             foreach (var name in pinger.EndpointNames.Where(a => monitoredService.Key.SrvEquals(a)))
                 pinger.UnregisterEndpoint(name);
         }
-    }   
+    }
 
 }

@@ -2,7 +2,6 @@
 using KubernetesSyncronizer.Data;
 using System;
 using System.Collections.Generic;
-using static KubernetesSyncronizer.Util.K8sKeyExtensions;
 
 
 namespace KubernetesSyncronizer.Util;

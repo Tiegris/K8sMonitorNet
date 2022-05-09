@@ -1,6 +1,4 @@
 ﻿using KubernetesSyncronizer.Data;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace KubernetesSyncronizer.Util;
 static public class K8sKeyExtensions

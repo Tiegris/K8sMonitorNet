@@ -1,5 +1,4 @@
-﻿using EndpointPinger;
-using System;
+﻿using System;
 
 namespace K8sMonitorCore.Aggregation.Dto.Tree;
 

@@ -42,7 +42,7 @@ public class NodeSrvDto
     public string Name { get; init; }
     public ICollection<NodePodDto> Pods { get; init; }
     public ServiceHealthStatusDto? Health { get; init; }
-    public ServiceConfigurationError Errors { get; init; }    
+    public ServiceConfigurationError Errors { get; init; }
     public ServiceSettingsDto? PingerSettings { get; init; }
 }
 

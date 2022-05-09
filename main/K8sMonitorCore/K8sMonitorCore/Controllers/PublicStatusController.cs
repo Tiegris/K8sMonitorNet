@@ -8,7 +8,8 @@ namespace K8sMonitorCore.Controllers;
 
 [ApiController]
 [Route("/api/public/status")]
-public class PublicStatusController : ControllerBase {
+public class PublicStatusController : ControllerBase
+{
     private readonly AggregationService aggregator;
 
     public PublicStatusController(AggregationService aggregator) {
