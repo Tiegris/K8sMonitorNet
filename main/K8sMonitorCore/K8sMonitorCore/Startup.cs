@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using System;
+using System.Threading;
 
 namespace K8sMonitorCore;
 
@@ -22,6 +24,10 @@ public class Startup
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
+        Console.WriteLine("Started Sleeping");
+        Thread.Sleep(new TimeSpan(0, 0, 45));
+        Console.WriteLine("Sleeping ended, starting app");
+
         services.Configure<Gui>(
             Configuration.GetSection("Gui"));
         bool guiEnabled = Configuration.GetValue("Gui::Enabled", false);
