@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: debugger
-        image: mcr.microsoft.com/dotnet/sdk:6.0
+        image: tiegris/k8s-monitor-core:latest
         command: ["sleep", "7200"]
         env:
         - name: "ASPNETCORE_ENVIRONMENT"
