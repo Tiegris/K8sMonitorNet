@@ -24,6 +24,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services) {
         services.Configure<Gui>(
             Configuration.GetSection("Gui"));
+        bool guiEnabled = Configuration.GetValue("Gui::Enabled", false);
 
         services.AddHttpClient();
 
@@ -41,25 +42,25 @@ public class Startup
         services.AddSwaggerGen(c => {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "K8sMonitorCore", Version = "v1" });
         });
-        services.AddRazorPages();
+        if (guiEnabled) services.AddRazorPages();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<Gui> gui) {
-        bool guiEnabled = Configuration.GetValue<bool>("Gui::Enabled", false);
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<Gui> guiOptions) {
+        var gui = guiOptions.Value;
 
         if (env.IsDevelopment()) {
-            if (guiEnabled) app.UseDeveloperExceptionPage();
+            if (gui.Enabled) app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "K8sMonitorCore v1"));
         } else {
-            if (guiEnabled) app.UseExceptionHandler("/Error");
+            if (gui.Enabled) app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            app.UseHsts();
+            if (gui.Enabled) app.UseHsts();
         }
 
-        if (guiEnabled) app.UseHttpsRedirection();
-        if (guiEnabled) app.UseStaticFiles();
+        if (gui.Enabled) app.UseHttpsRedirection();
+        if (gui.Enabled) app.UseStaticFiles();
 
         app.UseRouting();
 
@@ -67,7 +68,7 @@ public class Startup
 
         app.UseEndpoints(endpoints => {
             endpoints.MapControllers();
-            if (guiEnabled) endpoints.MapRazorPages();
+            if (gui.Enabled) endpoints.MapRazorPages();
         });
     }
 }
