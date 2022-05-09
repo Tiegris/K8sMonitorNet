@@ -31,6 +31,7 @@ spec:
     spec:
       containers:
       - name: debugger
+        imagePullPolicy: Always
         image: tiegris/k8s-monitor-core:latest
         command: ["sleep", "7200"]
         env:
