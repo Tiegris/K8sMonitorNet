@@ -60,3 +60,10 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{- define "helpers.list-env-variables" }}
+{{- range $key, $val := .Values.envs }}
+- name: {{ $key | quote }}
+  value: {{ $val | quote }}
+{{- end }}
+{{- end }}

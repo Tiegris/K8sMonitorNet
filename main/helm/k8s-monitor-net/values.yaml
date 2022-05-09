@@ -4,6 +4,10 @@
 
 replicaCount: 1
 
+envs:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  Gui.Enabled: "true"
+
 image:
   repository: tiegris
   name: k8s-monitor-core
