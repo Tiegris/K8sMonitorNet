@@ -22,17 +22,18 @@ public class K8sKey : IKey, IComparable<K8sKey>
         return false;
     }
 
-    public string Ns { get; set; }
-    public string Srv { get; set; }
+    public string Ns { get; init; }
+    public string Srv { get; init; }
 
-    public string? Pod { get; set; }
+    public string? Pod { get; init; }
 
     public K8sKey(string ns, string srv) {
         Ns = ns;
         Srv = srv;
     }
 
-    public override string ToString() => $"{Ns}::{Srv}";
+    private string? _toString = null;
+    public override string ToString() => _toString ??= $"{Ns}::{Srv}";
 
     public int CompareTo(K8sKey? other) {
         int ns = Ns.CompareTo(other?.Ns);

@@ -1,33 +1,31 @@
 ﻿using K8sMonitorCore.Aggregation.Dto;
-using K8sMonitorCore.Aggregation.Dto.Detailed;
+using K8sMonitorCore.Aggregation.Dto.Tree;
+using KubernetesSyncronizer.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static KubernetesSyncronizer.Util.K8sKeyExtensions;
 
 namespace K8sMonitorCore.Aggregation.Service;
 
 public partial class AggregationService
 {
+    public IList<NodeNsDto> TreeGrouping() {
+        var grouping = from i in stats
+                group i by (i.Key as K8sKey)?.GetSrvNs() into srvs
+                group srvs by srvs.Key.Ns;
 
-    public IList<ServiceInfoDto> PlainList() {
-        var statusInfos = pingerManager.Scrape();
-        var resources = resourceRegistry.Values;
-
-        return resources.Select(service => new ServiceInfoDto(
-            service.Key.ToString(),
-            service.Errors,
-            statusInfos.Where(endpoint => service.Key.SrvEquals(endpoint.Key)).FirstOrDefault()?.ToDto(),
-            service.Errors.HasErrors ?
-            null :
-            new ServiceSettingsDto(
-                service.FailureThreshold,
-                service.Timeout,
-                service.Period,
-                service.Uri,
-                service.Hpa
-            )
+        var y = grouping.Select(ns => new NodeNsDto(
+            ns.Key, 
+            ns.Select(srv => new NodeSrvDto(
+                srv.Key.Srv,
+                registry.Single(c => c.Key.SrvEquals(srv.Key)).Value,
+                srv.Select(pod => new NodePodDto(pod)).ToList()
+            )).ToList()
         )).ToList();
-    }
+
+        return y;
+    }   
 
 }
 

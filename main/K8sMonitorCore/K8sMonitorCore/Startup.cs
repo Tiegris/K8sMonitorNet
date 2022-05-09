@@ -27,7 +27,7 @@ public class Startup
         services.AddK8sClient();
         services.AddK8sListening();
 
-        services.AddScoped<AggregationService>();
+        services.AddTransient<AggregationService>();
 
         services.Configure<Defaults>(
             Configuration.GetSection("Defaults"));

@@ -24,6 +24,7 @@ public class ResourceRegistry
         this.extractor = new Extractor(options, k8s, this, loggerFactory);
     }
 
+    public ConcurrentDictionary<K8sKey, MonitoredService> Map => map;
     private readonly ConcurrentDictionary<K8sKey, MonitoredService> map = new();
     private readonly ConcurrentDictionary<K8sKey, long> resourceVersions = new();
 
@@ -94,8 +95,6 @@ public class ResourceRegistry
             foreach (var name in pinger.EndpointNames.Where(a => monitoredService.Key.SrvEquals(a)))
                 pinger.UnregisterEndpoint(name);
         }
-    }
-
-    public ICollection<MonitoredService> Values => map.Values;
+    }   
 
 }

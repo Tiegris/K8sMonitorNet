@@ -1,7 +1,7 @@
 ﻿using KubernetesSyncronizer.Data;
 using System;
 
-namespace K8sMonitorCore.Aggregation.Dto.Detailed;
+namespace K8sMonitorCore.Aggregation.Dto.Tree;
 
 public class ServiceSettingsDto
 {

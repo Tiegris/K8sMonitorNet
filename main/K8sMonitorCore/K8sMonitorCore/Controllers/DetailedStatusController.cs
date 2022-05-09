@@ -1,4 +1,4 @@
-﻿using K8sMonitorCore.Aggregation.Dto.Detailed;
+﻿using K8sMonitorCore.Aggregation.Dto.Tree;
 using K8sMonitorCore.Aggregation.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -16,7 +16,8 @@ public class DetailedStatusController : ControllerBase
     }
 
 
-    [HttpGet("List")]
-    public IList<ServiceInfoDto> List() => aggregator.PlainList();
+    [HttpGet("Tree")]
+    public IList<NodeNsDto> List() => aggregator.TreeGrouping();
+
 
 }

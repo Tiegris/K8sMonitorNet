@@ -2,6 +2,7 @@
 using K8sMonitorCore.Aggregation.Dto.Simple;
 using KubernetesSyncronizer.Data;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using static KubernetesSyncronizer.Util.K8sKeyExtensions;
@@ -16,9 +17,9 @@ public partial class AggregationService
 
     private static bool GetHealthOfSrv(IKey selector,
         IEnumerable<EndpointStatusInfo> endpoints,
-        ICollection<MonitoredService> resources) {
+        ConcurrentDictionary<K8sKey, MonitoredService> resources) {
 
-        var hpa = resources.Single(a => a.Key.SrvEquals(selector)).Hpa;
+        var hpa = resources.Single(a => a.Key.SrvEquals(selector)).Value.Hpa;
         if (hpa is { Enabled: true }) {
             return endpoints.Count(AllHealthy) * 100 / endpoints.Count() > hpa.Percentage;
         } else {
@@ -28,7 +29,7 @@ public partial class AggregationService
 
     private static bool GetHealthOfNs(
         IEnumerable<EndpointStatusInfo> endpoints,
-        ICollection<MonitoredService> resources) {
+        ConcurrentDictionary<K8sKey, MonitoredService> resources) {
 
         return endpoints.All(a => GetHealthOfSrv(
             a.Key,
@@ -37,45 +38,36 @@ public partial class AggregationService
     }
 
     public bool GetHealthOf(string ns, string? srv = null) {
-        var statusInfos = pingerManager.Scrape();
-        var resources = resourceRegistry.Values;
-
         var endpoints = srv is null ?
-            statusInfos.Where(a => a.Key is K8sKey ak && ak.Ns == ns) :
-            statusInfos.Where(a => a.Key is K8sKey ak && ak.Ns == ns && ak.Srv == srv);
+            stats.Where(a => a.Key is K8sKey ak && ak.Ns == ns) :
+            stats.Where(a => a.Key is K8sKey ak && ak.Ns == ns && ak.Srv == srv);
 
         if (!endpoints.Any())
             throw new KeyNotFoundException();
 
         if (srv is null) {
-            return GetHealthOfNs(endpoints, resources);
+            return GetHealthOfNs(endpoints, registry);
         } else {
-            return GetHealthOfSrv(new K8sKey(ns, srv), endpoints, resources);
+            return GetHealthOfSrv(new K8sKey(ns, srv), endpoints, registry);
         }
     }
 
     public IEnumerable<SimpleStatusDto> GetHealthGroupBySrv() {
-        var statusInfos = pingerManager.Scrape();
-        var resources = resourceRegistry.Values;
-
-        return from i in statusInfos
+        return from i in stats
                group i by (i.Key as K8sKey)?.GetSrvNs() into nss
                orderby nss.Key
                select new SimpleStatusDto(
-                   GetHealthOfSrv(nss.Key, nss, resources),
+                   GetHealthOfSrv(nss.Key, nss, registry),
                    nss.Key.ToString()
                );
     }
 
     public IEnumerable<SimpleStatusDto> GetHealthGroupByNs() {
-        var statusInfos = pingerManager.Scrape();
-        var resources = resourceRegistry.Values;
-
-        return from i in statusInfos
+        return from i in stats
                group i by (i.Key as K8sKey)?.Ns into nss
                orderby nss.Key
                select new SimpleStatusDto(
-                   GetHealthOfNs(nss, resources),
+                   GetHealthOfNs(nss, registry),
                    nss.Key
                );
     }
