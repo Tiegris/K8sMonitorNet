@@ -1,0 +1,64 @@
+﻿@model IEnumerable<K8sMonitorCore.Aggregation.Dto.Tree.NodeNsDto>
+
+<div class="container">
+    @foreach (var ns in Model)
+    {
+        <div class="mb-5 d-flex row">
+            <div class="col-2 ">
+                <div class="card" id="ns-@ns.Name">
+                    <p class="card-header">@ns.Name</p>
+                </div>
+            </div>            
+            <div class="col-10" id="ns-@ns.Name-srvs">
+                @foreach (var srv in ns.Services) {
+                    <div class="mb-3 d-flex row">
+                        <div class="col-6">
+                            <div class="card" id="ns-@ns.Name-srv-@srv.Name">
+                                <p class="card-header">@srv.Name</p>
+                                <div class="card-body">
+                                    @if (srv.Health.HealthyPercent is not null) {
+                                        <p>Percent of healthy pods: @srv.Health.HealthyPercent%</p>
+                                    }
+                                    <p>Last checked: @srv.Health.LastChecked</p>
+                                    <p>@srv.Health.LastError</p>
+                                </div>
+                                <hr>
+                                <div class="card-body">
+                                    <p>@srv.PingerSettings.</p>                                    
+                                </div>                                
+                                @if (srv is {Errors.HasErrors: true}) {
+                                    <hr>
+                                    <div class="card-body">
+                                        @foreach (var err in srv.Errors.ErrorList)
+                                        {
+                                            <div>
+                                                @err.Type.ToString() error on property: @err.Key, found: @err.Found
+                                                ErrorMessage: @err.Message
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-6" id="ns-@ns.Name-srv-@srv.Name-pods">
+                            @if (srv.PingerSettings.Hpa.Enabled) {
+                                @foreach (var pod in srv.Pods)
+                                {
+                                    <div class="card" id="ns-@ns.Name-srv-@srv.Name-pod-@pod.Name">
+                                        <p class="card-header">@pod.Name</p>
+                                        <div class="card-body">
+                                            <p class="card-text">This pod is <span class="@pod.StatusString">@pod.StatusString</span>, last checked at: @pod.LastChecked</p>
+                                            @if(!string.IsNullOrWhiteSpace(pod.LastError)) {
+                                                <p class="card-text">LastError: @pod.LastError</p> 
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

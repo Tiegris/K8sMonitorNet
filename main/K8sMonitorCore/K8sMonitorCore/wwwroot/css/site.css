@@ -69,3 +69,19 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+span.Dead {
+    color: red;
+}
+
+span.Dying {
+    color: darkorange;
+}
+
+span.Recovering {
+    color: yellow;
+}
+
+span.Healthy {
+    color: green;
+}

@@ -1,9 +1,11 @@
 ﻿using K8sMonitorCore.Aggregation.Dto.Simple;
+using K8sMonitorCore.Aggregation.Dto.Tree;
 using K8sMonitorCore.Aggregation.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 
 namespace WebUi.Pages;
@@ -18,9 +20,13 @@ public class IndexModel : PageModel
         this.aggregation = aggregation;
     }
 
-    public IEnumerable<SimpleStatusDto>? StatusList { get; set; }
-
+    public IEnumerable<NodeNsDto>? StatusList { get; set; }
+    
     public ICollection<SelectListItem> GroupByOptions { get; set; } = new SelectListItem[] {
+            new SelectListItem {
+                Text = "TreeView",
+                Value = "tv"
+            },
             new SelectListItem {
                 Text = "Service",
                 Value = "srv"
@@ -28,13 +34,13 @@ public class IndexModel : PageModel
             new SelectListItem {
                 Text = "Namespace",
                 Value = "ns"
-            }
+            },            
         };
 
 
 
     public void OnGet() {
-        StatusList = aggregation.GetHealthGroupBySrv();
+        StatusList = aggregation.TreeGrouping();
     }
 
 
@@ -42,11 +48,17 @@ public class IndexModel : PageModel
     public string? GroupById { get; set; }
 
     public PartialViewResult OnPost() {
-        if (GroupById is "ns")
-            StatusList = aggregation.GetHealthGroupByNs();
-        else if (GroupById is "srv")
-            StatusList = aggregation.GetHealthGroupBySrv();
+        if (GroupById is "tv")
+            return Partial("_TreeView", aggregation.TreeGrouping());
 
-        return Partial("_SimpleList", StatusList);
+        IEnumerable<SimpleStatusDto> lst;
+        if (GroupById is "ns")
+            lst = aggregation.GetHealthGroupByNs();
+        else if (GroupById is "srv")
+            lst = aggregation.GetHealthGroupBySrv();
+        else
+            throw new ArgumentException($"Invalid GroupById: {GroupById}");
+
+        return Partial("_SimpleList", lst);
     }
 }
