@@ -25,15 +25,19 @@ public class ServiceMonitor : IDisposable
     public void StartWatching() {
         watch?.Dispose();
         var podlistResp = client.ListServiceForAllNamespacesWithHttpMessagesAsync(watch: true);
-        watch = podlistResp.Watch<V1Service, V1ServiceList>(WatchEventHandler);
-        watch.OnClosed += Watch_OnClosed;
+        watch = podlistResp.Watch<V1Service, V1ServiceList>(Watch_OnEvent, onClosed: Watch_OnClosed, onError: Watch_OnError);
+    }
+
+    private void Watch_OnError(Exception e) {
+        logger.LogError("Error in watch: {message}", e.Message);
     }
 
     private void Watch_OnClosed() {
-        throw new NotImplementedException();
+        logger.LogInformation("Restarting watch");
+        StartWatching();
     }
 
-    private void WatchEventHandler(WatchEventType type, V1Service item) {
+    private void Watch_OnEvent(WatchEventType type, V1Service item) {
         try {
             if (!resourceRegistry.ValidateEventOrder(item))
                 return;

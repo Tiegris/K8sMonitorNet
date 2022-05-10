@@ -2,76 +2,79 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: #0366d6;
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
+
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .border-top {
-  border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
 }
+
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
 }
 
 span.Dead {
-    color: red;
+    color: rgba(230, 0, 0, 1);
 }
 
 span.Dying {
@@ -86,21 +89,31 @@ span.Healthy {
     color: green;
 }
 
+
 p.ColoredTitle {
     font-size: 22px;
 }
 
 div.Dead p.ColoredTitle {
-    background-color: rgb(230, 0, 0, 0.40);
+    background-color: rgba(230, 0, 0, 0.40);
 }
 
 div.HasErrors p.ColoredTitle {
     background-color: rgba(228, 188, 59, 0.50);
 }
 
-div.Healthy p.ColoredTitle {    
+div.Healthy p.ColoredTitle {
     background-color: rgba(24, 177, 13, 0.65);
 }
+
+div.Recovering p.ColoredTitle {
+    background-color: #ddff0079
+}
+
+div.Dying p.ColoredTitle {
+    background-color: rgba(255, 141, 0, 0.50)
+}
+
 
 tbody.spread th {
     text-align: start
@@ -108,4 +121,44 @@ tbody.spread th {
 
 tbody.spread td {
     text-align: end
+}
+
+
+div.Dead {
+    border-color: rgba(230, 0, 0, 1);
+}
+
+div.HasErrors {
+    border-color: rgba(228, 188, 59, 1);
+}
+
+div.Healthy {
+    border-color: rgba(24, 177, 13, 1);
+}
+
+table.my-table {
+
+}
+
+table.my-table td {
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    border-top: none;
+}
+
+table.my-table th {
+    padding-left: 0px;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    border-top: none;
+}
+
+div.error-field {
+    text-align: right;
+}
+
+div.error-field p {
+    text-align: left;
+    padding-left: 0px;
+    font-weight: bold
 }
