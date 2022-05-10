@@ -33,8 +33,10 @@ public class ServiceMonitor : IDisposable
     }
 
     private void Watch_OnClosed() {
-        logger.LogInformation("Restarting watch");
-        StartWatching();
+        if (!disposing) {
+            logger.LogInformation("Restarting watch");
+            StartWatching();
+        }
     }
 
     private void Watch_OnEvent(WatchEventType type, V1Service item) {
@@ -63,7 +65,8 @@ public class ServiceMonitor : IDisposable
     }
 
     #region Dispose
-    private bool disposed;
+    private bool disposing = false;
+    private bool disposed = false;
     public void Dispose() {
         Dispose(true);
         GC.SuppressFinalize(this);
@@ -71,6 +74,7 @@ public class ServiceMonitor : IDisposable
     protected virtual void Dispose(bool disposing) {
         if (!disposed) {
             if (disposing) {
+                this.disposing = true;
                 watch?.Dispose();
             }
             disposed = true;

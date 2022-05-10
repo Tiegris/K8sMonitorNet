@@ -28,8 +28,8 @@ public class Startup
         //Thread.Sleep(new TimeSpan(0, 0, 45));
         //Console.WriteLine("Sleeping ended, starting app");
 
-        services.Configure<Gui>(
-            Configuration.GetSection("Gui"));
+        services.Configure<Security>(Configuration.GetSection("Security"));
+        services.Configure<Gui>(Configuration.GetSection("Gui"));
         bool guiEnabled = Configuration.GetValue("Gui:Enabled", false);
 
         services.AddHttpClient();
@@ -52,8 +52,9 @@ public class Startup
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<Gui> guiOptions) {
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<Gui> guiOptions, IOptions<Security> securityOptions) {
         var gui = guiOptions.Value;
+        var security = securityOptions.Value;
 
         if (env.IsDevelopment()) {
             if (gui.Enabled) app.UseDeveloperExceptionPage();
@@ -62,10 +63,10 @@ public class Startup
         } else {
             if (gui.Enabled) app.UseExceptionHandler("/Error");
             // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            if (gui.Enabled) app.UseHsts();
+            if (security.Hsts) app.UseHsts();
         }
 
-        if (gui.Enabled) app.UseHttpsRedirection();
+        if (security.Https) app.UseHttpsRedirection();
         if (gui.Enabled) app.UseStaticFiles();
 
         app.UseRouting();
