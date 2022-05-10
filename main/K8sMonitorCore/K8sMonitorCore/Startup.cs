@@ -25,8 +25,8 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
         if (Configuration.GetValue("Debug:DelayStartup", false)) {
-            Console.WriteLine("Delaying startup by 45 seconds for debug reasons");
-            Thread.Sleep(new TimeSpan(0, 0, 45));
+            Console.WriteLine("Delaying startup by 60 seconds for debug reasons");
+            Thread.Sleep(new TimeSpan(0, 0, 60));
             Console.WriteLine("Delay ended, starting app");
         }
 

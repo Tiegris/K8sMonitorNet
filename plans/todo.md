@@ -26,5 +26,3 @@
 - [x] A pingelendő végpontokat a rendszer a Kubernetes API-ja segítségével folyamatosan figyeli, és új szolgáltatás/pod megjelenésekor és változásakor azt is bevonja a pingelendő körébe
 - [-] Az alkalmazáshoz készül Helm chart
     - ingressek mit engedek ki
-    - annotációk
-    - resources
