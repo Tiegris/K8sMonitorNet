@@ -5,8 +5,6 @@
 replicaCount: 1
 
 appSettings:
-  #Uncomment this
-  #Debug__DelayStartup: "true"
   Gui__Enabled: "true"
   Security__Https: "true"
   Security__Hsts: "true"
@@ -18,7 +16,6 @@ appSettings:
   Defaults__Hpa__Percentage: "70"  
 
 extraEnvs: {}
-  #ASPNETCORE_ENVIRONMENT: "Development"
 
 image:
   repository: tiegris
