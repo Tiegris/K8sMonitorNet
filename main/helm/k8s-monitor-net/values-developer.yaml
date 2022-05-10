@@ -1,0 +1,10 @@
+# Use this file while deploying for development
+# helm template k8s-monitor-net --values .\k8s-monitor-net\values-developer.yaml
+
+appSettings:
+  Debug__DelayStartup: "true"
+
+extraEnvs:
+  ASPNETCORE_ENVIRONMENT: "Development"
+
+useProbes: false
