@@ -21,9 +21,15 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-        
-    - name: Build the Docker image
+
+    - name: Build the Prod Docker image
       run: docker build ./main/K8sMonitorCore --file ./main/K8sMonitorCore/K8sMonitorCore/Dockerfile --tag tiegris/k8s-monitor-core:latest
-        
-    - name: Push
+
+    - name: Push Prod
       run: docker push tiegris/k8s-monitor-core:latest
+
+    - name: Build the Dev Docker image
+      run: docker build ./main/K8sMonitorCore --file ./main/K8sMonitorCore/K8sMonitorCore/Dockerfile.dev --tag tiegris/k8s-monitor-core:dev
+
+    - name: Push Dev
+      run: docker push tiegris/k8s-monitor-core:dev
