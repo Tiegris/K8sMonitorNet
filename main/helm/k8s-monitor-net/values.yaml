@@ -59,13 +59,14 @@ service:
   port: 80
 
 ingress:
-  enabled: false
+  enabled: true
   ingressClassName: nginx
   annotations: {}
   hosts:
     - host: "local.monitor.com"
       paths:
-      - path: /
+      # This only exposes the public api
+      - path: /api/public
         pathType: Prefix
         backend:
           servicePort: 80
