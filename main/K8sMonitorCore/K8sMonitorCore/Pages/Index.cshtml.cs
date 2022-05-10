@@ -4,7 +4,6 @@ using K8sMonitorCore.Aggregation.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
@@ -12,16 +11,14 @@ namespace WebUi.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
     private readonly AggregationService aggregation;
 
-    public IndexModel(ILogger<IndexModel> logger, AggregationService aggregation) {
-        _logger = logger;
+    public IndexModel(AggregationService aggregation) {
         this.aggregation = aggregation;
     }
 
     public IEnumerable<NodeNsDto>? StatusList { get; set; }
-    
+
     public ICollection<SelectListItem> GroupByOptions { get; set; } = new SelectListItem[] {
             new SelectListItem {
                 Text = "TreeView",
@@ -34,7 +31,7 @@ public class IndexModel : PageModel
             new SelectListItem {
                 Text = "Namespace",
                 Value = "ns"
-            },            
+            },
         };
 
 

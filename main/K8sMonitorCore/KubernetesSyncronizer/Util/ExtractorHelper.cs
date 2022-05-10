@@ -48,7 +48,7 @@ internal static class ExtractorHelper
             return new Uri($"{scheme}://{srv}.{ns}.svc.cluster.local:{port}/{path}");
         } catch {
             return null;
-        }        
+        }
     }
 
 }

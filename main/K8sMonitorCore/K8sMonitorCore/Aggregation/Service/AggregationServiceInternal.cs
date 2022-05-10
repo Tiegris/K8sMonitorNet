@@ -1,5 +1,4 @@
 ﻿using K8sMonitorCore.Aggregation.Dto.Tree;
-using KubernetesSyncronizer.Data;
 using System.Collections.Generic;
 using System.Linq;
 using static KubernetesSyncronizer.Util.K8sKeyExtensions;
@@ -17,7 +16,7 @@ public partial class AggregationService
         var y = grouping.Select(ns => new NodeNsDto(
             ns.Key,
             ns.Select(srv => new NodeSrvDto(
-                srv.Key.Srv,                
+                srv.Key.Srv,
                 registry[srv.Key.GetSrvNs()],
                 stats.Where(c => srv.Key.SrvEquals(c.Key)).Select(pod => new NodePodDto(pod)).ToList()
             )).ToList()
