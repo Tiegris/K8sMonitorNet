@@ -5,16 +5,16 @@
 replicaCount: 1
 
 appSettings:
-  Debug:DelayStartup: true
-  Gui:Enabled: true
-  Security:Https: true
-  Security:Hsts: true
-  Defaults:Timeout: 8
-  Defaults:Period: 30
-  Defaults:FailureThreshold: 2
-  Defaults:Port: 80
-  Defaults:Hpa:Enabled: true
-  Defaults:Hpa:Percentage: 70  
+  Debug__DelayStartup: "true"
+  Gui__Enabled: "true"
+  Security__Https: "true"
+  Security__Hsts: "true"
+  Defaults__Timeout: "8"
+  Defaults__Period: "30"
+  Defaults__FailureThreshold: "2"
+  Defaults__Port: "80"
+  Defaults__Hpa__Enabled: "true"
+  Defaults__Hpa__Percentage: "70"  
 
 extraEnvs:
   ASPNETCORE_ENVIRONMENT: "Development"
