@@ -24,8 +24,12 @@ public class ServiceMonitor : IDisposable
         watch?.Dispose();
         var podlistResp = client.ListServiceForAllNamespacesWithHttpMessagesAsync(watch: true);
         watch = podlistResp.Watch<V1Service, V1ServiceList>(WatchEventHandler);
+        watch.OnClosed += Watch_OnClosed;
     }
 
+    private void Watch_OnClosed() {
+        throw new NotImplementedException();
+    }
 
     private void WatchEventHandler(WatchEventType type, V1Service item) {
         try {

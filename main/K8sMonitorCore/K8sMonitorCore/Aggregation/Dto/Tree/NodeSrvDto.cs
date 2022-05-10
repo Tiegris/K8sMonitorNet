@@ -19,24 +19,25 @@ public class NodeSrvDto
             );
         Pods = pods;
 
-        if (PingerSettings is { Hpa.Enabled: true }) {
-            var p = Pods.OrderBy(b => b.LastChecked).First();
-            int percent = Pods.Count(b => b.StatusCode == StatusType.Healthy) * 100;
-            Health = new ServiceHealthStatusDto(
-                p.LastChecked,
-                percent / Pods.Count > PingerSettings.Hpa.Percentage,
-                percent,
-                p.LastError
-            );
-        } else {
-            var p = Pods.Single();
-            Health = new ServiceHealthStatusDto(
-                p.LastChecked,
-                p.StatusCode == StatusType.Healthy,
-                null,
-                p.LastError
-            );
-        }
+        if (!Errors.HasErrors)
+            if (PingerSettings is { Hpa.Enabled: true }) {
+                var p = Pods.OrderBy(b => b.LastChecked).First();
+                int percent = Pods.Count(b => b.StatusCode == StatusType.Healthy) * 100;
+                Health = new ServiceHealthStatusDto(
+                    p.LastChecked,
+                    percent / Pods.Count > PingerSettings.Hpa.Percentage,
+                    percent,
+                    p.LastError
+                );
+            } else {
+                var p = Pods.Single();
+                Health = new ServiceHealthStatusDto(
+                    p.LastChecked,
+                    p.StatusCode == StatusType.Healthy,
+                    null,
+                    p.LastError
+                );
+            }
     }
 
     public string Name { get; init; }

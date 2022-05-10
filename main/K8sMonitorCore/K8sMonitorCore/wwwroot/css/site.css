@@ -85,3 +85,27 @@ span.Recovering {
 span.Healthy {
     color: green;
 }
+
+p.ColoredTitle {
+    font-size: 22px;
+}
+
+div.Dead p.ColoredTitle {
+    background-color: rgb(230, 0, 0, 0.40);
+}
+
+div.HasErrors p.ColoredTitle {
+    background-color: rgba(228, 188, 59, 0.50);
+}
+
+div.Healthy p.ColoredTitle {    
+    background-color: rgba(24, 177, 13, 0.65);
+}
+
+tbody.spread th {
+    text-align: start
+}
+
+tbody.spread td {
+    text-align: end
+}

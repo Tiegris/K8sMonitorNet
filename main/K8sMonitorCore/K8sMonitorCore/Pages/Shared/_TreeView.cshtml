@@ -6,35 +6,59 @@
         <div class="mb-5 d-flex row">
             <div class="col-2 ">
                 <div class="card" id="ns-@ns.Name">
-                    <p class="card-header">@ns.Name</p>
+                    <p class="card-header ColoredTitle">@ns.Name</p>
                 </div>
-            </div>            
+            </div>
             <div class="col-10" id="ns-@ns.Name-srvs">
                 @foreach (var srv in ns.Services) {
                     <div class="mb-3 d-flex row">
                         <div class="col-6">
-                            <div class="card" id="ns-@ns.Name-srv-@srv.Name">
-                                <p class="card-header">@srv.Name</p>
-                                <div class="card-body">
-                                    @if (srv.Health.HealthyPercent is not null) {
-                                        <p>Percent of healthy pods: @srv.Health.HealthyPercent%</p>
-                                    }
-                                    <p>Last checked: @srv.Health.LastChecked</p>
-                                    <p>@srv.Health.LastError</p>
-                                </div>
-                                <hr>
-                                <div class="card-body">
-                                    <p>@srv.PingerSettings.</p>                                    
-                                </div>                                
-                                @if (srv is {Errors.HasErrors: true}) {
-                                    <hr>
+                            <div class="card @(srv.Errors.HasErrors ? "HasErrors" : srv is {Health.Healthy: true} ? "Healthy" : "Dead")" id="ns-@ns.Name-srv-@srv.Name">
+                                <p class="card-header ColoredTitle">@srv.Name</p>
+                                @if (srv is not {Errors.HasErrors: true}) {
+                                    <div class="card-body pb-2">
+                                        @if (srv.Health?.HealthyPercent is not null) {
+                                            <p>Percent of healthy pods: @srv.Health.HealthyPercent%</p>
+                                        }
+                                        <p>Last checked: @srv.Health.LastChecked</p>
+                                        @if (!string.IsNullOrWhiteSpace(srv.Health.LastError)) {
+                                            <p>@srv.Health.LastError</p>
+                                        }
+                                        <table class="table mb-0">
+                                          <tbody class="spread">
+                                            <tr>
+                                              <th scope="row">FailureThreshold</th>
+                                              <td>@srv.PingerSettings.FailureThreshold</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Period</th>
+                                              <td>@srv.PingerSettings.Period</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Timeout</th>
+                                              <td>@srv.PingerSettings.Timeout</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Monitor pods</th>
+                                              <td>@srv.PingerSettings.Hpa.Enabled</td>
+                                            </tr>
+                                            @if (@srv.PingerSettings.Hpa.Enabled) {
+                                            <tr>
+                                                <th scope="row">Hpa threshold percentage</th>
+                                                <td>@srv.PingerSettings.Hpa.Percentage</td>
+                                            </tr>
+                                            }
+                                          </tbody>
+                                        </table>
+                                    </div>
+                                } else {                                    
                                     <div class="card-body">
                                         @foreach (var err in srv.Errors.ErrorList)
                                         {
-                                            <div>
-                                                @err.Type.ToString() error on property: @err.Key, found: @err.Found
-                                                ErrorMessage: @err.Message
-                                            </div>
+                                            <hr />
+                                            <p>@err.Type.ToString() error on property: <span class="font-italic">@err.Key</span></p>                                            
+                                            <p>ErrorMessage: @err.Message</p>
+                                            <p>Value found: <span class="font-italic">@err.Found</span></p>
                                         }
                                     </div>
                                 }
@@ -44,8 +68,8 @@
                             @if (srv.PingerSettings.Hpa.Enabled) {
                                 @foreach (var pod in srv.Pods)
                                 {
-                                    <div class="card" id="ns-@ns.Name-srv-@srv.Name-pod-@pod.Name">
-                                        <p class="card-header">@pod.Name</p>
+                                    <div class="card @pod.StatusString" id="ns-@ns.Name-srv-@srv.Name-pod-@pod.Name">
+                                        <p class="card-header ColoredTitle">@pod.Name</p>
                                         <div class="card-body">
                                             <p class="card-text">This pod is <span class="@pod.StatusString">@pod.StatusString</span>, last checked at: @pod.LastChecked</p>
                                             @if(!string.IsNullOrWhiteSpace(pod.LastError)) {

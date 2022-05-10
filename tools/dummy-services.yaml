@@ -5,6 +5,12 @@ metadata:
   annotations:
     mnet.uri.path: "Wait"
     mnet.uri.port: "900000"
+    mnet.uri.scheme: "tcp://"
+    mnet.timeout: "alma"
+    mnet.period: "10f"
+    mnet.failureThreshold: "0x3"
+    mnet.hpa.enabled: "no"
+    mnet.hpa.percentage: "yes"
 spec:
   selector:
     app: dummy-1

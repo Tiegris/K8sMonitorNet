@@ -9,18 +9,19 @@ namespace K8sMonitorCore.Aggregation.Service;
 public partial class AggregationService
 {
     public IList<NodeNsDto> TreeGrouping() {
-        var grouping = from i in stats
-                       group i by (i.Key as K8sKey)?.GetSrvNs() into srvs
+        var grouping = from i in registry
+                       group i by i.Key.GetSrvNs() into srvs
+                       orderby srvs.Key
                        group srvs by srvs.Key.Ns;
 
         var y = grouping.Select(ns => new NodeNsDto(
             ns.Key,
             ns.Select(srv => new NodeSrvDto(
-                srv.Key.Srv,
-                registry.Single(c => c.Key.SrvEquals(srv.Key)).Value,
-                srv.Select(pod => new NodePodDto(pod)).ToList()
+                srv.Key.Srv,                
+                registry[srv.Key.GetSrvNs()],
+                stats.Where(c => srv.Key.SrvEquals(c.Key)).Select(pod => new NodePodDto(pod)).ToList()
             )).ToList()
-        )).ToList();
+        )).OrderBy(o => o.Name).ToList();
 
         return y;
     }
