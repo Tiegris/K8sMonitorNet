@@ -8,3 +8,6 @@ extraEnvs:
   ASPNETCORE_ENVIRONMENT: "Development"
 
 useProbes: false
+
+image:
+  tag: "dev"
