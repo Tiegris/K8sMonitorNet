@@ -19,7 +19,8 @@ public static class StartupExtensions
 
     public static IServiceCollection AddK8sListening(this IServiceCollection services) {
         services.AddSingleton<ResourceRegistry>();
-        services.AddHostedService<AutodiscoveryHostedService>();
+        services.AddSingleton<AutodiscoveryHostedService>();
+        services.AddHostedService(provider => provider.GetService<AutodiscoveryHostedService>()!);
         return services;
     }
 }

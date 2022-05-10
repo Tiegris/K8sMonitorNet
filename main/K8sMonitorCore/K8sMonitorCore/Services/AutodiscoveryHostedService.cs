@@ -15,6 +15,7 @@ public class AutodiscoveryHostedService : IHostedService
         this.discovery = new ServiceMonitor(
             client, resourceRegistry, loggerFactory.CreateLogger<ServiceMonitor>());
     }
+    public bool Watching => discovery.Watching;
 
     public Task StartAsync(CancellationToken cancellationToken) {
         discovery.StartWatching();

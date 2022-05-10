@@ -14,6 +14,8 @@ public class ServiceMonitor : IDisposable
     private readonly ResourceRegistry resourceRegistry;
     private readonly ILogger<ServiceMonitor> logger;
 
+    public bool Watching => watch?.Watching ?? false;
+
     public ServiceMonitor(IKubernetes k8s, ResourceRegistry resourceRegistry, ILogger<ServiceMonitor> logger) {
         client = k8s;
         this.resourceRegistry = resourceRegistry;
