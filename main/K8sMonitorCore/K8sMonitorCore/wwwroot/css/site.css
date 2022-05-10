@@ -82,7 +82,7 @@ span.Dying {
 }
 
 span.Recovering {
-    color: yellow;
+    color: darkorange;
 }
 
 span.Healthy {
