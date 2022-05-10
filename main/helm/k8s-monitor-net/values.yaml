@@ -60,14 +60,14 @@ service:
 
 ingress:
   enabled: false
+  ingressClassName: nginx
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: ""
+    - host: "local.monitor.com"
       paths:
-      - path: /api/public/
-        backend:          
+      - path: /
+        pathType: Prefix
+        backend:
           servicePort: 80
   #tls: []
   #  - secretName: chart-example-tls
