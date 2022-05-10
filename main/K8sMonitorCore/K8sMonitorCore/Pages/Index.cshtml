@@ -52,8 +52,23 @@
         begin = function (xhr, data) {
             document.getElementById("load").disabled = true;
         };
-        //background worker
+
+        // Handle page visibility change events
+        function visibilityListener() {
+          switch(document.visibilityState) {
+            case "hidden":
+                intervalIds.forEach(x => clearInterval(x))
+                break;
+            case "visible":
+                intervalIds.forEach(x => clearInterval(x))
+                intervalIds.push( setInterval(_ => {$("#editForm").submit();}, 5000) );
+                break;
+          }
+        }
+
+        document.addEventListener("visibilitychange", visibilityListener);
         document.getElementById("lastUpdateLabel").innerText = (new Date()).toLocaleTimeString()
-        intervalId = setInterval(_ => {$("#editForm").submit();}, 5000);
+        intervalIds = []
+        intervalIds.push( setInterval(_ => {$("#editForm").submit();}, 5000) );
     </script>    
 }

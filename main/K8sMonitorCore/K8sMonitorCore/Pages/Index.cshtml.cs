@@ -35,7 +35,6 @@ public class IndexModel : PageModel
         };
 
 
-
     public void OnGet() {
         StatusList = aggregation.TreeGrouping();
     }
