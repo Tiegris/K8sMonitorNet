@@ -61,9 +61,16 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{- define "helpers.list-env-variables" }}
-{{- range $key, $val := .Values.envs }}
+{{- define "helpers.list-envs" }}
+{{- range $key, $val := .Values.extraEnvs }}
 - name: {{ $key | quote }}
-  value: {{ $val | quote }}
+  value: {{ $val }}
+{{- end }}
+{{- end }}
+
+{{- define "helpers.list-appSettings" }}
+{{- range $key, $val := .Values.appSettings }}
+- name: {{ $key | quote }}
+  value: {{ $val }}
 {{- end }}
 {{- end }}

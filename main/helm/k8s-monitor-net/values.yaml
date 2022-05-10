@@ -4,9 +4,20 @@
 
 replicaCount: 1
 
-envs:
+appSettings:
+  Debug:DelayStartup: true
+  Gui:Enabled: true
+  Security:Https: true
+  Security:Hsts: true
+  Defaults:Timeout: 8
+  Defaults:Period: 30
+  Defaults:FailureThreshold: 2
+  Defaults:Port: 80
+  Defaults:Hpa:Enabled: true
+  Defaults:Hpa:Percentage: 70  
+
+extraEnvs:
   ASPNETCORE_ENVIRONMENT: "Development"
-  Gui.Enabled: "true"
 
 image:
   repository: tiegris
