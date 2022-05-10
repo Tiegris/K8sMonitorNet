@@ -22,10 +22,10 @@ public class NodeSrvDto
         if (!Errors.HasErrors)
             if (PingerSettings is { Hpa.Enabled: true }) {
                 var p = Pods.OrderBy(b => b.LastChecked).First();
-                int percent = Pods.Count(b => b.StatusCode == StatusType.Healthy) * 100;
+                int percent = Pods.Count(b => b.StatusCode == StatusType.Healthy) * 100 / Pods.Count;
                 Health = new ServiceHealthStatusDto(
                     p.LastChecked,
-                    percent / Pods.Count > PingerSettings.Hpa.Percentage,
+                    percent > PingerSettings.Hpa.Percentage,
                     percent,
                     p.LastError
                 );
