@@ -4,16 +4,17 @@
 
 replicaCount: 1
 
+# Settings of the application
 appSettings:
-  Gui__Enabled: "true"
-  Security__Https: "false"
-  Security__Hsts: "false"
+  Gui__Enabled: "true"              # Turn to "false" to disable the WebUi
+  Security__Https: "false"          # Turn to "true" to enable https redirection for all endpoints
+  Security__Hsts: "false"           # Turn to "true" to enable hsts
   Defaults__Timeout: "8"
   Defaults__Period: "30"
   Defaults__FailureThreshold: "2"
   Defaults__Port: "80"
   Defaults__Hpa__Enabled: "true"
-  Defaults__Hpa__Percentage: "70"  
+  Defaults__Hpa__Percentage: "70"
 
 extraEnvs: {}
 
@@ -58,12 +59,12 @@ service:
 
 ingress:
   enabled: true
-  ingressClassName: nginx
+  ingressClassName: nginx   #IngressController name
   annotations: {}
   hosts:
     - host: "local.monitor.com"
       paths:
-      # This only exposes the public api
+      # This exposes only the public api, not the WebUi
       - path: /api/public
         pathType: Prefix
         backend:
@@ -76,10 +77,8 @@ ingress:
 useProbes: true
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # If you want to specify resources, uncomment the following lines, 
+  # adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi

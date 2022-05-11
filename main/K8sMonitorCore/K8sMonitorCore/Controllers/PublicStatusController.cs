@@ -44,6 +44,7 @@ public class PublicStatusController : ControllerBase
         }
     }
 
+    [HttpGet("nss")]
     [HttpGet("namespaces")]
     public ActionResult<IEnumerable<SimpleStatusDto>> GetByNs() {
         try {
@@ -53,6 +54,7 @@ public class PublicStatusController : ControllerBase
         }
     }
 
+    [HttpGet("svcs")]
     [HttpGet("services")]
     public ActionResult<IEnumerable<SimpleStatusDto>> GetBySrv() {
         try {
