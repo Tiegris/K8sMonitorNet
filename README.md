@@ -30,10 +30,10 @@ List of all annotations
 - mnet.uri.port: port to ping (valid port number)
 - mnet.uri.path: path to ping (string)
 - mnet.timeout: timeout in seconds (int)
-- mnet.period: delay between the begining pings in seconds (int)
+- mnet.period: delay between the beginning pings in seconds (int)
 - mnet.failureThreshold: after this many unsuccessful pings, the service is considered Dead (int)
 - mnet.hpa.enabled: set to true to monitor pods, false to only the service (bool)
-- mnet.hpa.percentage: At least this pecent of the pods of the service must be Healthy to consider the service Healthy (int)
+- mnet.hpa.percentage: At least this percent of the pods of the service must be Healthy to consider the service Healthy (int)
 
 Example service:
 
@@ -85,7 +85,7 @@ Returns:
 
 List all monitored namespaces.
 
-Returns the list of namespaces in json format, example:
+Returns the list of namespaces in JSON format, example:
 
 ```json
 [
@@ -104,7 +104,7 @@ Returns the list of namespaces in json format, example:
 
 List all monitored services.
 
-Returns the list of namespaces in json format, example:
+Returns the list of namespaces in JSON format, example:
 
 ```json
 //Name format: "<namespace-name>::<service-name>"
