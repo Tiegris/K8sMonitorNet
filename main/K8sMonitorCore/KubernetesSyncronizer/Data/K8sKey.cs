@@ -11,41 +11,41 @@ public class K8sKey : IKey, IComparable<K8sKey>
         return false;
     }
 
-    public bool SrvEquals(IKey rhs) {
+    public bool SvcEquals(IKey rhs) {
         if (rhs is K8sKey rhsKey) {
-            return Ns == rhsKey.Ns && Srv == rhsKey.Srv;
+            return Ns == rhsKey.Ns && Svc == rhsKey.Svc;
         }
         return false;
     }
 
     public string Ns { get; init; }
-    public string Srv { get; init; }
+    public string Svc { get; init; }
 
     public string? Pod { get; init; }
 
-    public K8sKey(string ns, string srv) {
+    public K8sKey(string ns, string svc) {
         Ns = ns;
-        Srv = srv;
+        Svc = svc;
     }
 
     private string? _toString = null;
-    public override string ToString() => _toString ??= $"{Ns}::{Srv}";
+    public override string ToString() => _toString ??= $"{Ns}::{Svc}";
 
     public int CompareTo(K8sKey? other) {
         int ns = Ns.CompareTo(other?.Ns);
         if (ns == 0)
-            return Srv.CompareTo(other?.Srv);
+            return Svc.CompareTo(other?.Svc);
         return ns;
     }
 
     public override bool Equals(object? obj) {
         return obj is K8sKey key &&
                Ns == key.Ns &&
-               Srv == key.Srv &&
+               Svc == key.Svc &&
                Pod == key.Pod;
     }
 
     public override int GetHashCode() {
-        return HashCode.Combine(Ns, Srv, Pod);
+        return HashCode.Combine(Ns, Svc, Pod);
     }
 }

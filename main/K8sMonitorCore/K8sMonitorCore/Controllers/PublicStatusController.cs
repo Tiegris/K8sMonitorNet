@@ -30,10 +30,10 @@ public class PublicStatusController : ControllerBase
         }
     }
 
-    [HttpGet("{ns}/{srv}")]
-    public ActionResult Get([FromRoute] string ns, [FromRoute] string srv) {
+    [HttpGet("{ns}/{svc}")]
+    public ActionResult Get([FromRoute] string ns, [FromRoute] string svc) {
         try {
-            if (aggregator.GetHealthOf(ns, srv))
+            if (aggregator.GetHealthOf(ns, svc))
                 return StatusCode(200, "All healthy within selection");
             else
                 return StatusCode(533, "Dead services within selection");
@@ -56,9 +56,9 @@ public class PublicStatusController : ControllerBase
 
     [HttpGet("svcs")]
     [HttpGet("services")]
-    public ActionResult<IEnumerable<SimpleStatusDto>> GetBySrv() {
+    public ActionResult<IEnumerable<SimpleStatusDto>> GetBySvc() {
         try {
-            return Ok(aggregator.GetHealthGroupBySrv());
+            return Ok(aggregator.GetHealthGroupBySvc());
         } catch (Exception) {
             return StatusCode(500, "Unhandled Error");
         }

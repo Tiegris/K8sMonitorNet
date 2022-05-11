@@ -9,16 +9,16 @@ public partial class AggregationService
 {
     public IList<NodeNsDto> TreeGrouping() {
         var grouping = from i in registry
-                       group i by i.Key.GetSrvNs() into srvs
-                       orderby srvs.Key
-                       group srvs by srvs.Key.Ns;
+                       group i by i.Key.GetSvcNs() into svcs
+                       orderby svcs.Key
+                       group svcs by svcs.Key.Ns;
 
         var y = grouping.Select(ns => new NodeNsDto(
             ns.Key,
-            ns.Select(srv => new NodeSrvDto(
-                srv.Key.Srv,
-                registry[srv.Key.GetSrvNs()],
-                stats.Where(c => srv.Key.SrvEquals(c.Key)).Select(pod => new NodePodDto(pod)).ToList()
+            ns.Select(svc => new NodeSvcDto(
+                svc.Key.Svc,
+                registry[svc.Key.GetSvcNs()],
+                stats.Where(c => svc.Key.SvcEquals(c.Key)).Select(pod => new NodePodDto(pod)).ToList()
             )).ToList()
         )).OrderBy(o => o.Name).ToList();
 

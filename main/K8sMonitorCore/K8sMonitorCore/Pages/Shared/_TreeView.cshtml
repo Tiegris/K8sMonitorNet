@@ -9,54 +9,54 @@
                     <p class="card-header ColoredTitle">@ns.Name</p>
                 </div>
             </div>
-            <div class="col-10" id="ns-@ns.Name-srvs">
-                @foreach (var srv in ns.Services) {
+            <div class="col-10" id="ns-@ns.Name-svcs">
+                @foreach (var svc in ns.Services) {
                     <div class="mb-3 d-flex row">
                         <div class="col-6">
-                            <div class="card @(srv.Errors.HasErrors ? "HasErrors" : srv is {Health.Healthy: true} ? "Healthy" : "Dead")" id="ns-@ns.Name-srv-@srv.Name">
-                                <p class="card-header ColoredTitle">@srv.Name</p>
-                                @if (srv is not {Errors.HasErrors: true}) {
+                            <div class="card @(svc.Errors.HasErrors ? "HasErrors" : svc is {Health.Healthy: true} ? "Healthy" : "Dead")" id="ns-@ns.Name-svc-@svc.Name">
+                                <p class="card-header ColoredTitle">@svc.Name</p>
+                                @if (svc is not {Errors.HasErrors: true}) {
                                     <div class="card-body px-3 pb-1 pt-2">
                                         <table class="table my-table mb-0">
                                             <tbody class="spread">
                                                 <tr>
                                                     <th scope="row">Live pod percentage</th>
-                                                    <td>@((srv.Health?.HealthyPercent is not null) ? $"{srv.Health.HealthyPercent:00} %" : "N/A")</td>
+                                                    <td>@((svc.Health?.HealthyPercent is not null) ? $"{svc.Health.HealthyPercent:00} %" : "N/A")</td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">Last checked</th>
-                                                    <td>@srv.Health.LastChecked</td>
+                                                    <td>@svc.Health.LastChecked</td>
                                                 </tr>
                                             </tbody>
                                         </table>                                        
-                                        @if (!string.IsNullOrWhiteSpace(srv.Health.LastError)) {
+                                        @if (!string.IsNullOrWhiteSpace(svc.Health.LastError)) {
                                             <div class="error-field">
                                                 <p class="m-0">Last error</p>
-                                                @srv.Health.LastError
+                                                @svc.Health.LastError
                                             </div>
                                         }
                                         <table class="table mb-0 mt-2">
                                           <tbody class="spread">
                                             <tr>
                                               <th scope="row">FailureThreshold</th>
-                                              <td>@srv.PingerSettings.FailureThreshold</td>
+                                              <td>@svc.PingerSettings.FailureThreshold</td>
                                             </tr>
                                             <tr>
                                               <th scope="row">Period</th>
-                                              <td>@srv.PingerSettings.Period</td>
+                                              <td>@svc.PingerSettings.Period</td>
                                             </tr>
                                             <tr>
                                               <th scope="row">Timeout</th>
-                                              <td>@srv.PingerSettings.Timeout</td>
+                                              <td>@svc.PingerSettings.Timeout</td>
                                             </tr>
                                             <tr>
                                               <th scope="row">Monitor pods</th>
-                                              <td>@srv.PingerSettings.Hpa.Enabled</td>
+                                              <td>@svc.PingerSettings.Hpa.Enabled</td>
                                             </tr>
-                                            @if (@srv.PingerSettings.Hpa.Enabled) {
+                                            @if (svc.PingerSettings.Hpa.Enabled) {
                                             <tr>
                                                 <th scope="row">Hpa threshold percentage</th>
-                                                <td>@srv.PingerSettings.Hpa.Percentage</td>
+                                                <td>@svc.PingerSettings.Hpa.Percentage</td>
                                             </tr>
                                             }
                                           </tbody>
@@ -64,7 +64,7 @@
                                     </div>
                                 } else {                                    
                                     <div class="card-body p-3">
-                                        @foreach (var err in srv.Errors.ErrorList)
+                                        @foreach (var err in svc.Errors.ErrorList)
                                         {
                                             <hr />
                                             <p>@err.Type.ToString() error on property: <span class="font-italic">@err.Key</span></p>                                            
@@ -75,11 +75,11 @@
                                 }
                             </div>
                         </div>
-                        <div class="col-6" id="ns-@ns.Name-srv-@srv.Name-pods">
-                            @if (srv.PingerSettings.Hpa.Enabled) {
-                                @foreach (var pod in srv.Pods)
+                        <div class="col-6" id="ns-@ns.Name-svc-@svc.Name-pods">
+                            @if (svc.PingerSettings.Hpa.Enabled) {
+                                @foreach (var pod in svc.Pods)
                                 {
-                                    <div class="card mb-1 @pod.StatusString" id="ns-@ns.Name-srv-@srv.Name-pod-@pod.Name">
+                                    <div class="card mb-1 @pod.StatusString" id="ns-@ns.Name-svc-@svc.Name-pod-@pod.Name">
                                         <p class="card-header ColoredTitle">@pod.Name</p>
                                         <div class="card-body p-3">
                                             <table class="table my-table mb-0">

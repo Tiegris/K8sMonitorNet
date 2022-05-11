@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace K8sMonitorCore.Aggregation.Dto.Tree;
 
-public class NodeSrvDto
+public class NodeSvcDto
 {
-    public NodeSrvDto(string name, MonitoredService ms, ICollection<NodePodDto> pods) {
+    public NodeSvcDto(string name, MonitoredService ms, ICollection<NodePodDto> pods) {
         Name = name;
         Errors = ms.Errors;
         PingerSettings = new ServiceSettingsDto(

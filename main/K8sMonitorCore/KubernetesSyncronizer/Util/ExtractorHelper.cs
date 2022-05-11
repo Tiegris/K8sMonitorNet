@@ -43,9 +43,9 @@ internal static class ExtractorHelper
     }
     #endregion
 
-    internal static Uri? BuildFqdnUri(string scheme, string ns, string srv, int port, string path) {
+    internal static Uri? BuildFqdnUri(string scheme, string ns, string svc, int port, string path) {
         try {
-            return new Uri($"{scheme}://{srv}.{ns}.svc.cluster.local:{port}/{path}");
+            return new Uri($"{scheme}://{svc}.{ns}.svc.cluster.local:{port}/{path}");
         } catch {
             return null;
         }

@@ -25,7 +25,7 @@ public class MonitoredService : IDisposable
     public Hpa? Hpa { get; init; }
     public ServiceConfigurationError Errors { get; init; }
 
-    public K8sKey GetPodFullName(V1Pod pod) => new(Key.Ns, Key.Srv) { Pod = pod.Name() };
+    public K8sKey GetPodFullName(V1Pod pod) => new(Key.Ns, Key.Svc) { Pod = pod.Name() };
 
     public bool TryGetEndpointForPod(V1Pod pod, [MaybeNullWhen(false)] out K8sKey key, [MaybeNullWhen(false)] out Endpoint endpoint) {
         if (Errors.HasErrors || Uri is null || pod is { Status.PodIP: null }) {

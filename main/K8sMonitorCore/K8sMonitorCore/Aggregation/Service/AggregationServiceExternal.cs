@@ -20,17 +20,17 @@ public partial class AggregationService
             throw new KeyNotFoundException();
 
         foreach (var svc in svcs)
-            if (!GetHealthOfSrv(svc.Key))
+            if (!GetHealthOfSvc(svc.Key))
                 return false;
 
         return true;
     }
 
-    private bool GetHealthOfSrv(K8sKey selector) {
+    private bool GetHealthOfSvc(K8sKey selector) {
         if (!registry.TryGetValue(selector, out var svc))
             throw new KeyNotFoundException();
 
-        var endpoints = stats.Where(a => selector.SrvEquals(a.Key));
+        var endpoints = stats.Where(a => selector.SvcEquals(a.Key));
         if (!endpoints.Any())
             return false;
 
@@ -42,17 +42,17 @@ public partial class AggregationService
         }
     }
 
-    public bool GetHealthOf(string ns, string? srv = null) {
-        if (srv is null) {
+    public bool GetHealthOf(string ns, string? svc = null) {
+        if (svc is null) {
             return GetHealthOfNs(ns);
         } else {
-            return GetHealthOfSrv(new K8sKey(ns, srv));
+            return GetHealthOfSvc(new K8sKey(ns, svc));
         }
     }
 
-    public IEnumerable<SimpleStatusDto> GetHealthGroupBySrv() {
+    public IEnumerable<SimpleStatusDto> GetHealthGroupBySvc() {
         foreach (var svc in registry) {
-            yield return new SimpleStatusDto(GetHealthOfSrv(svc.Key), svc.Key.ToString());
+            yield return new SimpleStatusDto(GetHealthOfSvc(svc.Key), svc.Key.ToString());
         }
     }
 

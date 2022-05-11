@@ -91,7 +91,7 @@ public class ResourceRegistry
         if (map.TryRemove(serviceName, out var monitoredService)) {
             monitoredService.Dispose();
             logger.LogInformation("Service {resource} deleted.", monitoredService.Key);
-            foreach (var name in pinger.EndpointNames.Where(a => monitoredService.Key.SrvEquals(a)))
+            foreach (var name in pinger.EndpointNames.Where(a => monitoredService.Key.SvcEquals(a)))
                 pinger.UnregisterEndpoint(name);
         }
     }

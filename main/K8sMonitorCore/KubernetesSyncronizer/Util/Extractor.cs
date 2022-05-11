@@ -64,7 +64,7 @@ internal class Extractor
             ));
 
         string ns = it.Namespace();
-        string srv = it.Name();
+        string svc = it.Name();
 
         errors.AddIfNotNull(TryExtract(it, TIMEOUT, defaults.Timeout, out int timeout));
         errors.AddIfNotNull(TryExtract(it, PERIOD, defaults.Period, out int period));
@@ -79,18 +79,18 @@ internal class Extractor
                 "Hpa percentage must be between 1 and 100."
             ));
 
-        var srvName = it.ExtractKey();
+        var svcName = it.ExtractKey();
 
-        monitoredService = new(srvName, errors) {
+        monitoredService = new(svcName, errors) {
             Timeout = new TimeSpan(0, 0, timeout),
             Period = new TimeSpan(0, 0, period),
             FailureThreshold = failureThreshold,
-            Uri = BuildFqdnUri(scheme, ns, srv, port, path),
+            Uri = BuildFqdnUri(scheme, ns, svc, port, path),
             Hpa = new Hpa {
                 Enabled = hpaEnabled,
                 Percentage = hpaPercentage
             },
-            PodMonitor = hpaEnabled ? new(k8s, resourceRegistry, srvName, it.ExtractLabelString(), loggerFactory.CreateLogger<PodMonitor>()) : null
+            PodMonitor = hpaEnabled ? new(k8s, resourceRegistry, svcName, it.ExtractLabelString(), loggerFactory.CreateLogger<PodMonitor>()) : null
         };
         return true;
     }

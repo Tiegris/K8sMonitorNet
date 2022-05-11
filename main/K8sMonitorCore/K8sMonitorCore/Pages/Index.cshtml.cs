@@ -26,7 +26,7 @@ public class IndexModel : PageModel
             },
             new SelectListItem {
                 Text = "Service",
-                Value = "srv"
+                Value = "svc"
             },
             new SelectListItem {
                 Text = "Namespace",
@@ -50,8 +50,8 @@ public class IndexModel : PageModel
         IEnumerable<SimpleStatusDto> lst;
         if (GroupById is "ns")
             lst = aggregation.GetHealthGroupByNs();
-        else if (GroupById is "srv")
-            lst = aggregation.GetHealthGroupBySrv();
+        else if (GroupById is "svc")
+            lst = aggregation.GetHealthGroupBySvc();
         else
             throw new ArgumentException($"Invalid GroupById: {GroupById}");
 
