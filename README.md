@@ -57,7 +57,7 @@ If you do not provide an annotation, the default value is used instead. Default 
 
 There is no default value for `mnet.uri.path`, if you omit this, the service will not be monitored.
 
-## Public endpoint
+## Public endpoints
 
 There are 4 public endpoints of the app, all with the `/api/public/` prefix.
 
