@@ -154,7 +154,7 @@ helm upgrade --install ingress-nginx ingress-nginx \
 
 ## Contribution
 
-Source files located at main/K8sMonitorCore. This a .NET 6 app, you will need the .NET6 SDK an IDE for it.
+Source files located at main/K8sMonitorCore. This a .NET 6 app, you will need the .NET6 SDK and an IDE for it.
 
 ### Code structure
 
