@@ -1,5 +1,6 @@
 ﻿using EndpointPinger;
 using KubernetesSyncronizer.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,14 +22,23 @@ public class NodeSrvDto
 
         if (!Errors.HasErrors)
             if (PingerSettings is { Hpa.Enabled: true }) {
-                var p = Pods.OrderBy(b => b.LastChecked).First();
-                int percent = Pods.Count(b => b.StatusCode == StatusType.Healthy) * 100 / Pods.Count;
-                Health = new ServiceHealthStatusDto(
-                    p.LastChecked,
-                    percent > PingerSettings.Hpa.Percentage,
-                    percent,
-                    p.LastError
-                );
+                if (pods.Any()) {
+                    var p = Pods.OrderBy(b => b.LastChecked).First();
+                    int percent = Pods.Count(b => b.StatusCode == StatusType.Healthy) * 100 / Pods.Count;
+                    Health = new ServiceHealthStatusDto(
+                        p.LastChecked,
+                        percent > PingerSettings.Hpa.Percentage,
+                        percent,
+                        p.LastError
+                    );
+                } else {
+                    Health = new ServiceHealthStatusDto(
+                        DateTime.Now,
+                        false,
+                        null,
+                        "No pods behind this service"
+                        );
+                }
             } else {
                 var p = Pods.Single();
                 Health = new ServiceHealthStatusDto(
@@ -46,5 +56,4 @@ public class NodeSrvDto
     public ServiceConfigurationError Errors { get; init; }
     public ServiceSettingsDto? PingerSettings { get; init; }
 }
-
 
