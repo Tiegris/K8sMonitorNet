@@ -124,9 +124,11 @@ Returns the list of namespaces in JSON format, example:
 ]
 ```
 
-## Tips
+## Access the WebUi
 
-### Port forward
+The WebUi is not accessible by default. To make it accessible use port forward, or you can make it public by editing the path of the ingress in the values.yaml
+
+Port forward:
 
 ```bash
 SELECTOR="monitor"
@@ -141,6 +143,10 @@ $SELECTOR = "monitor"
 $POD = (k get pod --namespace="monitor-ns" -o name | Select-String $SELECTOR).Line.Split('/')[1]
 kubectl port-forward --namespace="monitor-ns" $POD 80:80
 ```
+
+After this, access the WebUi on [http://localhost](http://localhost)
+
+## Tips
 
 ### Ingress controller
 
