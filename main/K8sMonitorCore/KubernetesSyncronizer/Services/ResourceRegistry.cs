@@ -25,6 +25,7 @@ public class ResourceRegistry
     public ConcurrentDictionary<K8sKey, MonitoredService> Map => map;
     private readonly ConcurrentDictionary<K8sKey, MonitoredService> map = new();
     private readonly ConcurrentDictionary<K8sKey, long> resourceVersions = new();
+    internal void ClearEventHistory() => resourceVersions.Clear();
 
     internal bool ValidateEventOrder<T>(T item) where T : IMetadata<V1ObjectMeta> {
         K8sKey key = new(item.Namespace(), item.Name());
