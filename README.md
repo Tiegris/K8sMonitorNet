@@ -160,7 +160,7 @@ Source files located at main/K8sMonitorCore. This a .NET 6 app, you will need th
 
 Projects:
 
-- EndpointPinger: module for pinging any endpoints.
+- EndpointPinger: module for pinging any endpoints
 
 - KubernetesSyncronizer: module for watching service configurations and registering pingers
 
@@ -170,7 +170,7 @@ Projects:
 
 #### Local
 
-To run the app, you need a developer cluster. I used DockerDesktop kubernetes. Running the app locally from your IDE works, however the pingers will not be able to access the endpoints.
+To run the app, you need a developer cluster. I used DockerDesktop kubernetes. Running the app locally from your IDE works, however the pingers will not be able to access the endpoints inside your cluster.
 
 #### Remote
 
@@ -182,7 +182,7 @@ helm install k8s-monitor-net k8s-monitor-net --values="k8s-monitor-net/values-de
 
 This will deploy the latest version of the app from dockerhub.
 
-After this, you have 60 seconds to connect to the process with a remote debugger.
+After this, you have 60 seconds to connect to the process with a remote debugger. (the 60 seconds window only matters if you want to catch the startup with a breakpoint)
 
 With VisualStudio and DockerDesktop:
 
