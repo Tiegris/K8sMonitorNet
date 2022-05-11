@@ -6,8 +6,8 @@ replicaCount: 1
 
 appSettings:
   Gui__Enabled: "true"
-  Security__Https: "true"
-  Security__Hsts: "true"
+  Security__Https: "false"
+  Security__Hsts: "false"
   Defaults__Timeout: "8"
   Defaults__Period: "30"
   Defaults__FailureThreshold: "2"
