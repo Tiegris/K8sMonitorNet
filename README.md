@@ -162,7 +162,7 @@ Projects:
 
 - EndpointPinger: module for pinging any endpoints.
 
-- KubernetesSyncronizer: module watchin service configurations and registering pingers
+- KubernetesSyncronizer: module for watching service configurations and registering pingers
 
 - K8sMonitorCore: the main project with aggregation services, controllers, and WebUi
 
