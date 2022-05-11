@@ -76,7 +76,7 @@ public class ResourceRegistry
 
         if (resource is { Errors.HasErrors: true })
             return;
-
+        //The SonarCloud bug on the next line is not true. The if statement does evaluate for both boolean values.
         if (resource is { Hpa.Enabled: true }) {
             resource.PodMonitor?.StartWatching();
         } else {
