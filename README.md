@@ -141,10 +141,10 @@ On Windows PowerShell:
 ```PowerShell
 $SELECTOR = "monitor"
 $POD = (k get pod --namespace="monitor-ns" -o name | Select-String $SELECTOR).Line.Split('/')[1]
-kubectl port-forward --namespace="monitor-ns" $POD 80:80
+kubectl port-forward --namespace="monitor-ns" $POD 8080:80
 ```
 
-After this, access the WebUi on [http://localhost](http://localhost)
+After this, access the WebUi on [http://localhost:8080](http://localhost:8080)
 
 ## Tips
 
